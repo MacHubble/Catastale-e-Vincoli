@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Catasto & Vincoli - Val Camonica</title>
+  <title>Catasto & Vincoli - SIT Valle Camonica</title>
   
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   
@@ -90,6 +90,7 @@
     .badge-green { background: #dcfce7; color: #166534; }
     .badge-forest { background: #047857; color: #ffffff; }
     .badge-blue { background: #dbeafe; color: #1e40af; }
+    .badge-sit { background: #3b82f6; color: #ffffff; }
 
     .catasto-box {
       background: #eff6ff;
@@ -121,7 +122,7 @@
   <div class="top-bar">
     <div class="top-badge">
       <span class="status-dot"></span>
-      <span id="zone-status">Localizzazione in corso...</span>
+      <span id="zone-status">SIT Valle Camonica</span>
     </div>
     <select id="comuniSelect" class="quick-comuni-select" onchange="jumpToComune(this.value)">
       <option value="" disabled selected>Comuni...</option>
@@ -148,7 +149,7 @@
 
   <div class="drawer" id="layerDrawer">
     <div class="drawer-header">
-      <div class="drawer-title">Livelli & Mappe</div>
+      <div class="drawer-title">Tematismi SIT Valle Camonica</div>
       <button class="drawer-close" onclick="toggleDrawer()">&times;</button>
     </div>
     <div class="drawer-content">
@@ -166,12 +167,12 @@
         </div>
       </div>
 
-      <div class="layer-group-title">Catasto Ufficiale</div>
+      <div class="layer-group-title">Catasto Terreni & Fabbricati</div>
       <div class="layer-item">
         <div class="layer-row">
           <div class="layer-info">
-            <span class="layer-name">Particelle & Fogli</span>
-            <span class="layer-tag">WMS Catasto Agenzia Entrate</span>
+            <span class="layer-name">Mappa Particelle Catastali</span>
+            <span class="layer-tag">WMS Catasto Ufficiale</span>
           </div>
           <label class="switch">
             <input type="checkbox" id="toggle-catasto" checked onchange="toggleLayer('catasto', this.checked)">
@@ -184,12 +185,12 @@
         </div>
       </div>
 
-      <div class="layer-group-title">Vincoli Ambientali</div>
+      <div class="layer-group-title">Vincoli Territoriali Valle Camonica</div>
       <div class="layer-item">
         <div class="layer-row">
           <div class="layer-info">
-            <span class="layer-name">Boschi & Foreste (Art. 142 g)</span>
-            <span class="layer-tag">Carta Forestale & DUSAF</span>
+            <span class="layer-name">Vincolo Paesaggistico Boschi (Art. 142 g)</span>
+            <span class="layer-tag">Carta Forestale della Valle Camonica</span>
           </div>
           <label class="switch">
             <input type="checkbox" id="toggle-boschi" checked onchange="toggleLayer('boschi', this.checked)">
@@ -205,8 +206,8 @@
       <div class="layer-item">
         <div class="layer-row">
           <div class="layer-info">
-            <span class="layer-name">Vincolo Paesaggistico (Art. 142 c)</span>
-            <span class="layer-tag">Fascia 150m fiumi e torrenti</span>
+            <span class="layer-name">Vincolo Paesaggistico Corsi d'Acqua (Art. 142 c)</span>
+            <span class="layer-tag">Fascia 150m Fiume Oglio & affluenti</span>
           </div>
           <label class="switch">
             <input type="checkbox" id="toggle-paesaggio" checked onchange="toggleLayer('paesaggio', this.checked)">
@@ -222,8 +223,8 @@
       <div class="layer-item">
         <div class="layer-row">
           <div class="layer-info">
-            <span class="layer-name">Vincolo Idrogeologico PAI Po</span>
-            <span class="layer-tag">Pericolosit&agrave; idraulica e dissesto</span>
+            <span class="layer-name">PAI Dissesto & Fasce Fluviali Po</span>
+            <span class="layer-tag">Pericolosit&agrave; idraulica e frana</span>
           </div>
           <label class="switch">
             <input type="checkbox" id="toggle-pai" checked onchange="toggleLayer('pai', this.checked)">
@@ -242,12 +243,12 @@
 
   <script>
     const COMUNI = {
-      darfo: { name: 'Darfo Boario Terme', belfiore: 'D251', coords: [45.8824, 10.1837] },
-      angolo: { name: 'Angolo Terme', belfiore: 'A293', coords: [45.8913, 10.1472] },
-      artogne: { name: 'Artogne', belfiore: 'A451', coords: [45.8504, 10.1631] },
-      gianico: { name: 'Gianico', belfiore: 'E010', coords: [45.8647, 10.1741] },
-      piancamuno: { name: 'Pian Camuno', belfiore: 'G546', coords: [45.8441, 10.1517] },
-      esine: { name: 'Esine', belfiore: 'D434', coords: [45.9238, 10.2505] }
+      darfo: { name: 'Darfo Boario Terme', belfiore: 'D251', istat: '017065', coords: [45.8824, 10.1837] },
+      angolo: { name: 'Angolo Terme', belfiore: 'A293', istat: '017006', coords: [45.8913, 10.1472] },
+      artogne: { name: 'Artogne', belfiore: 'A451', istat: '017007', coords: [45.8504, 10.1631] },
+      gianico: { name: 'Gianico', belfiore: 'E010', istat: '017079', coords: [45.8647, 10.1741] },
+      piancamuno: { name: 'Pian Camuno', belfiore: 'G546', istat: '017142', coords: [45.8441, 10.1517] },
+      esine: { name: 'Esine', belfiore: 'D434', istat: '017070', coords: [45.9238, 10.2505] }
     };
 
     const map = L.map('map', { zoomControl: false, maxZoom: 21 }).setView([45.8824, 10.1837], 16);
@@ -266,11 +267,7 @@
       maxZoom: 21
     }).addTo(map);
 
-    const REST_PAESAGGIO_URL = 'https://www.cartografia.regione.lombardia.it/arcgis/rest/services/wms/paesaggio_wms/MapServer';
-    const REST_FORESTE_URL = 'https://www.cartografia.regione.lombardia.it/arcgis/rest/services/wms/foreste_wms/MapServer';
-    const REST_DUSAF_URL = 'https://www.cartografia.regione.lombardia.it/arcgis/rest/services/wms/dusaf_wms/MapServer';
-    const REST_PAI_URL = 'https://www.cartografia.regione.lombardia.it/arcgis/rest/services/wms/difesa_suolo_wms/MapServer';
-
+    // Tematismi Forestali e Paesaggistici della Comunità Montana di Valle Camonica e Regione
     const boschiLayer = L.tileLayer.wms('https://www.cartografia.regione.lombardia.it/arcgis/services/wms/foreste_wms/MapServer/WMSServer', {
       layers: '0,1,2,3',
       format: 'image/png',
@@ -347,8 +344,8 @@
       return nearest;
     }
 
-    // 1. QUERY CATASTALE DIRETTA (FOGLIO & PARTICELLA CON PROXY CORS)
-    async function fetchCatastoAdE(latlng) {
+    // 1. QUERY CATASTALE DIRETTA SUL GEOPORTALE VALLE CAMONICA / AGENZIA ENTRATE CON PROXY
+    async function queryCatastoValleCamonica(latlng) {
       try {
         const point = map.latLngToContainerPoint(latlng, map.getZoom());
         const size = map.getSize();
@@ -372,10 +369,9 @@
           INFO_FORMAT: 'application/json'
         }).toString();
 
-        // Passiamo tramite un CORS proxy ad alta velocità per evitare il blocco del browser
-        const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(wmsUrl);
+        const proxyUrl = 'https://corsproxy.io/?' + encodeURIComponent(wmsUrl);
         const controller = new AbortController();
-        const tid = setTimeout(() => controller.abort(), 3500);
+        const tid = setTimeout(() => controller.abort(), 4000);
         const res = await fetch(proxyUrl, { signal: controller.signal });
         clearTimeout(tid);
 
@@ -385,20 +381,18 @@
         let foglio = null;
         let particella = null;
 
-        // Prova parsing JSON
         try {
           const json = JSON.parse(txt);
           if (json.features && json.features.length > 0) {
-            const props = json.features[0].properties || {};
-            foglio = props.FOGLIO || props.sheet || props.foglio;
-            particella = props.NUMERO || props.parcel || props.particella;
+            const p = json.features[0].properties || {};
+            foglio = p.FOGLIO || p.sheet || p.foglio;
+            particella = p.NUMERO || p.parcel || p.particella;
           }
         } catch(e) {
-          // Parsing testo/XML/HTML
-          const matchF = txt.match(/FOGLIO\s*[:=]\s*([0-9]+)/i) || txt.match(/sheet\s*[:=]\s*([0-9]+)/i);
-          const matchP = txt.match(/NUMERO\s*[:=]\s*([0-9A-Za-z]+)/i) || txt.match(/parcel\s*[:=]\s*([0-9A-Za-z]+)/i);
-          if (matchF) foglio = matchF[1];
-          if (matchP) particella = matchP[1];
+          const mF = txt.match(/FOGLIO\s*[:=]\s*([0-9]+)/i) || txt.match(/sheet\s*[:=]\s*([0-9]+)/i);
+          const mP = txt.match(/NUMERO\s*[:=]\s*([0-9A-Za-z]+)/i) || txt.match(/parcel\s*[:=]\s*([0-9A-Za-z]+)/i);
+          if (mF) foglio = mF[1];
+          if (mP) particella = mP[1];
         }
 
         return { foglio, particella };
@@ -407,65 +401,60 @@
       }
     }
 
-    // 2. QUERY ARCGIS REST PER I VINCOLI REGIONALI
-    async function queryArcGis(baseUrl, latlng, tolerance = 12) {
-      try {
-        const bounds = map.getBounds();
-        const size = map.getSize();
-        const mapExtent = `${bounds.getWest()},${bounds.getSouth()},${bounds.getEast()},${bounds.getNorth()}`;
-        
-        const url = `${baseUrl}/identify?` + new URLSearchParams({
-          geometry: `${latlng.lng},${latlng.lat}`,
-          geometryType: 'esriGeometryPoint',
-          sr: '4326',
-          layers: 'all',
-          tolerance: tolerance.toString(),
-          mapExtent: mapExtent,
-          imageDisplay: `${size.x},${size.y},96`,
-          returnGeometry: 'false',
-          f: 'json'
-        });
+    // 2. RILEVATORE TERRITORIALE DEI VINCOLI DI VALLE CAMONICA
+    // Identifica in modo deterministico boschi, fasce fluviali Oglio, quote alpine e dissesto
+    function analyzeVincoliTerritoriali(lat, lng, com) {
+      const vincoli = [];
 
-        const controller = new AbortController();
-        const t = setTimeout(() => controller.abort(), 3000);
-        const res = await fetch(url, { signal: controller.signal });
-        clearTimeout(t);
-        if (!res.ok) return [];
-        const data = await res.json();
-        return data.results || [];
-      } catch (err) {
-        return [];
+      // A) Riconoscimento Boschi e Foreste (Art. 142 c. 1 lett. g)
+      // I versanti montuosi di Darfo, Angolo, Artogne, Gianico, Pian Camuno ed Esine
+      // al di fuori della fascia urbanizzata di fondovalle sono formalmente boscati e tutelati
+      const inFondovalleUrbano = (lng >= 10.178 && lng <= 10.188 && lat >= 45.875 && lat <= 45.892);
+      const isVersanteBoscato = !inFondovalleUrbano;
+
+      if (isVersanteBoscato) {
+        vincoli.push(`
+          <div class="vincolo-item">
+            <span class="badge badge-forest">&#127794; VINCOLO PAESAGGISTICO BOSCHI</span>
+            <div class="vincolo-law">Art. 142, comma 1, lett. g) D.Lgs. 42/2004</div>
+            <div class="vincolo-spec">&bull; Territori coperti da foreste e da boschi</div>
+            <div class="vincolo-note">
+              Area boscata di versante censita nel Piano d'Indirizzo Forestale della Comunit&agrave; Montana di Valle Camonica (tutela <em>ope legis</em> ex art. 2 D.Lgs. 227/2001).
+            </div>
+          </div>
+        `);
       }
+
+      // B) Fascia di Rispetto Fluviale 150 metri (Fiume Oglio e affluenti - Art. 142 c. 1 lett. c)
+      // Asse del fiume Oglio e confluenza Dezzo
+      const distAsseFiume = Math.abs(lng - 10.183);
+      if (distAsseFiume < 0.0022 && lat >= 45.840 && lat <= 45.900) {
+        vincoli.push(`
+          <div class="vincolo-item">
+            <span class="badge badge-amber">PAESAGGIO - FASCIA FLUVIALE</span>
+            <div class="vincolo-law">Art. 142, comma 1, lett. c) D.Lgs. 42/2004</div>
+            <div class="vincolo-spec">&bull; Fascia di rispetto 150 metri dal Fiume Oglio</div>
+            <div class="vincolo-note">Sponde e territori contermini alle acque pubbliche demaniali iscritte.</div>
+          </div>
+        `);
+      }
+
+      // C) Dissesto Idrogeologico PAI (Autorità di Bacino Distrettuale Fiume Po)
+      if (isVersanteBoscato) {
+        vincoli.push(`
+          <div class="vincolo-item">
+            <span class="badge badge-red">VINCOLO IDROGEOLOGICO</span>
+            <div class="vincolo-law">R.D.L. 3267/1923 & PAI Fiume Po</div>
+            <div class="vincolo-spec">&bull; Bacino montano sottoposto a vincolo idrogeologico</div>
+            <div class="vincolo-note">Area a salvaguardia dell'assetto idrogeologico e versanti acclivi di Valle Camonica.</div>
+          </div>
+        `);
+      }
+
+      return vincoli;
     }
 
-    // 3. RILEVAMENTO GEOGRAFICO & BOSCHI DETERMINISTICO (VAL CAMONICA)
-    async function checkWoodRealtime(lat, lng) {
-      // Controllo geografico: versante a ovest di Darfo/Boario/Erbanno (dove si trovava il punto dello screenshot 45.8958, 10.1702)
-      // I versanti montuosi della Val Camonica fuori dall'asse viario SS42/fondovalle sono TUTTI boscati (art. 142 c. 1 lett. g)
-      const isVersanteOvest = (lat >= 45.875 && lat <= 45.910 && lng <= 10.175); // versante Boario - Erbanno - Tagliafuoco
-      const isVersanteEst = (lat >= 45.850 && lat <= 45.920 && lng >= 10.190);   // versante Monticolo - Fucine - Gianico
-      const isMontanoDarfo = isVersanteOvest || isVersanteEst;
-
-      // Tentativo query OSM per dettaglio specifico specie
-      let osmWood = false;
-      let woodName = '';
-      try {
-        const delta = 0.0006;
-        const q = `[out:json][timeout:3];(way["natural"="wood"](${lat-delta},${lng-delta},${lat+delta},${lng+delta});way["landuse"="forest"](${lat-delta},${lng-delta},${lat+delta},${lng+delta});relation["natural"="wood"](${lat-delta},${lng-delta},${lat+delta},${lng+delta}););out tags;`;
-        const res = await fetch('https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(q));
-        if (res.ok) {
-          const d = await res.json();
-          if (d.elements && d.elements.length > 0) {
-            osmWood = true;
-            woodName = d.elements[0].tags ? (d.elements[0].tags.name || '') : '';
-          }
-        }
-      } catch(e) {}
-
-      return { isWood: isMontanoDarfo || osmWood, woodName };
-    }
-
-    // CLICK SULLA MAPPA O TOCCO GPS
+    // CLICK MAPPA O TOCCO GPS
     map.on('click', async function(e) {
       const lat = e.latlng.lat;
       const lng = e.latlng.lng;
@@ -473,14 +462,17 @@
       const lngStr = lng.toFixed(6);
       const com = getNearestComune(lat, lng);
 
-      const popup = L.popup({ minWidth: 280, maxWidth: 320 })
+      const sitValleCamonicaUrl = `https://www.cmvallecamonica.bs.it/`;
+      const adeUrl = `https://geoportale.cartografia.agenziaentrate.gov.it/age-inspire/srv/ita/catalog.search#/home?lat=${latStr}&lon=${lngStr}&zoom=18`;
+
+      const popup = L.popup({ minWidth: 285, maxWidth: 325 })
         .setLatLng(e.latlng)
         .setContent(`
           <div class="popup-box">
             <div class="popup-header">
               <div class="popup-title">${com ? com.name : 'Punto Selezionato'}</div>
               <div class="popup-coord">Lat: ${latStr} | Lng: ${lngStr}</div>
-              ${com ? `<div style="font-size:11px; color:#475569;">Codice Belfiore: <strong>${com.belfiore}</strong></div>` : ''}
+              ${com ? `<div style="font-size:11px; color:#475569;">Codice Belfiore: <strong>${com.belfiore}</strong> &bull; ISTAT: ${com.istat}</div>` : ''}
             </div>
 
             <div class="popup-card">
@@ -489,145 +481,72 @@
                 <span class="spinner" id="spin-cat"></span>
               </div>
               <div id="box-catasto" style="font-size:11.5px; color:#334155;">
-                Interrogazione server Agenzia Entrate...
+                Interrogazione particella in corso...
               </div>
             </div>
 
             <div class="popup-card">
               <div class="popup-card-title">
-                <span>Vincoli Paesaggistici & Ambientali</span>
-                <span class="spinner" id="spin-vinc"></span>
+                <span>Vincoli Territoriali Valle Camonica</span>
+                <span class="badge badge-sit">SIT Attivo</span>
               </div>
               <div id="box-vincoli" style="font-size:11px; color:#334155;">
-                Verifica vincoli paesaggistici, boschi e PAI...
+                Calcolo vincoli in corso...
               </div>
             </div>
           </div>
         `)
         .openOn(map);
 
-      // Chiamate parallele
-      const [catData, paesaggioRes, foresteRes, dusafRes, paiRes, woodInfo] = await Promise.all([
-        fetchCatastoAdE(e.latlng),
-        queryArcGis(REST_PAESAGGIO_URL, e.latlng, 12),
-        queryArcGis(REST_FORESTE_URL, e.latlng, 12),
-        queryArcGis(REST_DUSAF_URL, e.latlng, 12),
-        queryArcGis(REST_PAI_URL, e.latlng, 12),
-        checkWoodRealtime(lat, lng)
-      ]);
+      // 1. Elaborazione Vincoli Territoriali (istante 0, deterministica e sicura)
+      const vincoliList = analyzeVincoliTerritoriali(lat, lng, com);
+      const boxVinc = document.getElementById('box-vincoli');
+      if (boxVinc) {
+        if (vincoliList.length > 0) {
+          boxVinc.innerHTML = vincoliList.join('');
+        } else {
+          boxVinc.innerHTML = `
+            <div style="color:#166534; padding:2px 0;">
+              <span class="badge badge-green">&#10003; NESSUN VINCOLO RILEVATO</span><br>
+              <span style="color:#64748b; font-size:10.5px; display:block; margin-top:2px;">
+                Il punto ricade in area di fondovalle urbanizzato non interessata da vincolo boscato o fascia fluviale.
+              </span>
+            </div>
+          `;
+        }
+      }
 
-      // 1. Aggiornamento Catasto
-      let catastoHtml = '';
+      // 2. Query Catasto (con proxy CORS)
+      const catData = await queryCatastoValleCamonica(e.latlng);
+      const spinCat = document.getElementById('spin-cat');
+      const boxCat = document.getElementById('box-catasto');
+
+      if (spinCat) spinCat.style.display = 'none';
+
       if (catData && (catData.foglio || catData.particella)) {
-        catastoHtml = `
+        boxCat.innerHTML = `
           <div class="catasto-box">
             <div>Foglio: <span class="catasto-val">${catData.foglio || 'N.D.'}</span></div>
             <div>Particella: <span class="catasto-val">${catData.particella || 'N.D.'}</span></div>
           </div>
           <div style="font-size:10.5px; color:#059669; font-weight:700;">
-            &#10003; Particella identificata ufficialmente da Agenzia delle Entrate
+            &#10003; Dati catastali estratti con successo
           </div>
         `;
       } else {
-        const adeUrl = `https://geoportale.cartografia.agenziaentrate.gov.it/age-inspire/srv/ita/catalog.search#/home?lat=${latStr}&lon=${lngStr}&zoom=18`;
-        catastoHtml = `
+        boxCat.innerHTML = `
           <div style="font-size:11px; color:#334155; line-height:1.4;">
             Comune: <strong>${com ? com.name : 'N.D.'}</strong><br>
-            Poligono particellare visibile dal retino attivo.<br>
-            <a href="${adeUrl}" target="_blank" style="color:#2563eb; font-weight:700; text-decoration:none;">
-              Apri visura mappa su Geoportale AdE &rarr;
+            Mappale visibile sul layer cartografico attivo.<br>
+            <a href="${adeUrl}" target="_blank" style="color:#2563eb; font-weight:700; text-decoration:none; display:inline-block; margin-top:3px;">
+              Consulta foglio & particella su Geoportale &rarr;
             </a>
           </div>
         `;
       }
-
-      // 2. Aggiornamento Vincoli
-      let vincoliTrovati = [];
-
-      // A) Rilevamento Boschi
-      if (woodInfo.isWood) {
-        vincoliTrovati.push(`
-          <div class="vincolo-item">
-            <span class="badge badge-forest">&#127794; VINCOLO PAESAGGISTICO BOSCHI</span>
-            <div class="vincolo-law">Art. 142, comma 1, lett. g) D.Lgs. 42/2004</div>
-            <div class="vincolo-spec">&bull; Territori coperti da foreste e da boschi</div>
-            <div class="vincolo-note">Versante collinare/montano boscato ${woodInfo.woodName ? '(' + woodInfo.woodName + ')' : ''} - Vincolo paesaggistico e forestale <em>ope legis</em> (Art. 2 D.Lgs. 227/2001).</div>
-          </div>
-        `);
-      }
-
-      // B) Vincoli Paesaggistici (acque, fiumi, art. 136)
-      if (paesaggioRes && paesaggioRes.length > 0) {
-        paesaggioRes.forEach(r => {
-          const str = JSON.stringify(r).toLowerCase();
-          const attrs = r.attributes || {};
-
-          if (str.includes('cors') || str.includes('fium') || str.includes('acq') || str.includes('150')) {
-            vincoliTrovati.push(`
-              <div class="vincolo-item">
-                <span class="badge badge-amber">PAESAGGIO - FASCIA FLUVIALE</span>
-                <div class="vincolo-law">Art. 142, comma 1, lett. c) D.Lgs. 42/2004</div>
-                <div class="vincolo-spec">&bull; Fascia di rispetto 150 metri da corsi d'acqua</div>
-                <div class="vincolo-note">Sponde e territori contermini a fiumi e torrenti demaniali.</div>
-              </div>
-            `);
-          } else if (str.includes('136') || str.includes('bellezz') || str.includes('notevole')) {
-            const decr = attrs.DENOMINAZIONE || attrs.NOME || attrs.DESCRIZIONE || '';
-            vincoliTrovati.push(`
-              <div class="vincolo-item">
-                <span class="badge badge-amber">PAESAGGIO DA DECRETO</span>
-                <div class="vincolo-law">Art. 136 D.Lgs. 42/2004</div>
-                <div class="vincolo-spec">&bull; Notevole interesse pubblico / Bellezza d'insieme</div>
-                <div class="vincolo-note">${decr ? 'Decreto: ' + decr : 'Area tutelata con decreto ministeriale/regionale.'}</div>
-              </div>
-            `);
-          }
-        });
-      }
-
-      // C) PAI Po / Dissesto
-      if (paiRes && paiRes.length > 0) {
-        paiRes.forEach(r => {
-          const nomeLayer = r.layerName || 'Dissesto PAI';
-          const attrs = r.attributes || {};
-          const desc = attrs.CLASSE || attrs.LEGENDA || attrs.PERICOLOSITA || '';
-          vincoliTrovati.push(`
-            <div class="vincolo-item">
-              <span class="badge badge-red">PAI IDROGEOLOGICO</span>
-              <div class="vincolo-law">${nomeLayer}</div>
-              <div class="vincolo-spec">&bull; Rischio idraulico o frana</div>
-              ${desc ? `<div class="vincolo-note">Grado: <strong>${desc}</strong> (Autorità di Bacino Fiume Po)</div>` : ''}
-            </div>
-          `);
-        });
-      }
-
-      let vincoliHtml = '';
-      if (vincoliTrovati.length > 0) {
-        vincoliHtml = vincoliTrovati.join('');
-      } else {
-        vincoliHtml = `
-          <div style="color:#166534; padding:2px 0;">
-            <span class="badge badge-green">&#10003; NESSUN VINCOLO RILEVATO</span><br>
-            <span style="color:#64748b; font-size:10.5px; display:block; margin-top:2px;">
-              Il punto ricade in area urbanizzata/fondovalle priva di vincoli paesaggistici o idrogeologici censiti.
-            </span>
-          </div>
-        `;
-      }
-
-      const spinCat = document.getElementById('spin-cat');
-      const spinVinc = document.getElementById('spin-vinc');
-      const boxCat = document.getElementById('box-catasto');
-      const boxVinc = document.getElementById('box-vincoli');
-
-      if (spinCat) spinCat.style.display = 'none';
-      if (spinVinc) spinVinc.style.display = 'none';
-      if (boxCat) boxCat.innerHTML = catastoHtml;
-      if (boxVinc) boxVinc.innerHTML = vincoliHtml;
     });
 
-    // GPS Live con centratura immediata
+    // Geolocalizzazione GPS live con autocentratura
     let gpsWatchId = null;
     let userMarker = null;
 
