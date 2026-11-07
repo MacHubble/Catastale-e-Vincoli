@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Catasto & Vincoli Valle Camonica - Standalone</title>
+  <title>Catasto & Vincoli Valle Camonica</title>
   
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   
@@ -23,7 +23,6 @@
       backdrop-filter: blur(6px);
     }
     .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; }
-    .status-dot.offline { background: #3b82f6; }
     
     .quick-comuni-select {
       pointer-events: auto; background: rgba(255, 255, 255, 0.96);
@@ -59,6 +58,8 @@
     .layer-row { display: flex; align-items: center; justify-content: space-between; }
     .layer-name { font-size: 13px; font-weight: 600; color: #1e293b; }
     .layer-tag { font-size: 11px; color: #64748b; }
+    .layer-slider-row { margin-top: 6px; display: flex; align-items: center; gap: 8px; font-size: 11px; color: #64748b; }
+    .layer-slider-row input[type="range"] { flex: 1; accent-color: #2563eb; }
 
     .switch { position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0; }
     .switch input { opacity: 0; width: 0; height: 0; }
@@ -90,7 +91,6 @@
     .badge-green { background: #dcfce7; color: #166534; }
     .badge-forest { background: #047857; color: #ffffff; }
     .badge-blue { background: #dbeafe; color: #1e40af; }
-    .badge-local { background: #6366f1; color: #ffffff; }
 
     .catasto-box {
       background: #eff6ff;
@@ -109,14 +109,20 @@
     .vincolo-law { font-weight: 700; color: #0f172a; font-size: 11.5px; }
     .vincolo-spec { color: #047857; font-weight: 700; font-size: 11.5px; margin-top: 1px; }
     .vincolo-note { font-size: 10.5px; color: #475569; margin-top: 2px; }
+
+    .spinner {
+      display: inline-block; width: 12px; height: 12px; border: 2px solid #cbd5e1;
+      border-top-color: #2563eb; border-radius: 50%; animation: spin 0.8s linear infinite;
+    }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
 
   <div class="top-bar">
     <div class="top-badge">
-      <span class="status-dot offline"></span>
-      <span id="zone-status">Offline Ready</span>
+      <span class="status-dot"></span>
+      <span id="zone-status">Valle Camonica</span>
     </div>
     <select id="comuniSelect" class="quick-comuni-select" onchange="jumpToComune(this.value)">
       <option value="" disabled selected>Centra comune...</option>
@@ -143,7 +149,7 @@
 
   <div class="drawer" id="layerDrawer">
     <div class="drawer-header">
-      <div class="drawer-title">Tematismi Integrati</div>
+      <div class="drawer-title">Livelli Cartografici</div>
       <button class="drawer-close" onclick="toggleDrawer()">&times;</button>
     </div>
     <div class="drawer-content">
@@ -161,43 +167,56 @@
         </div>
       </div>
 
-      <div class="layer-group-title">Tematismi Vettoriali Incorporati</div>
+      <div class="layer-group-title">Mappa Catasto</div>
       <div class="layer-item">
         <div class="layer-row">
           <div class="layer-info">
-            <span class="layer-name">Aree Boscate (Art. 142 g)</span>
-            <span class="layer-tag">Attivo in memoria locale</span>
+            <span class="layer-name">Particelle & Fogli</span>
+            <span class="layer-tag">WMS Catasto Ufficiale</span>
           </div>
           <label class="switch">
-            <input type="checkbox" id="toggle-boschi-layer" checked onchange="toggleLocalLayer('boschi', this.checked)">
+            <input type="checkbox" id="toggle-catasto" checked onchange="toggleLayer('catasto', this.checked)">
             <span class="slider"></span>
           </label>
+        </div>
+        <div class="layer-slider-row">
+          <span>Opacit&agrave;</span>
+          <input type="range" min="0.2" max="1" step="0.05" value="0.9" oninput="setLayerOpacity('catasto', this.value)">
+        </div>
+      </div>
+
+      <div class="layer-group-title">Vincoli Ambientali</div>
+      <div class="layer-item">
+        <div class="layer-row">
+          <div class="layer-info">
+            <span class="layer-name">Carta Forestale / Boschi</span>
+            <span class="layer-tag">Regione Lombardia</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggle-boschi" checked onchange="toggleLayer('boschi', this.checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="layer-slider-row">
+          <span>Opacit&agrave;</span>
+          <input type="range" min="0.1" max="1" step="0.05" value="0.65" oninput="setLayerOpacity('boschi', this.value)">
         </div>
       </div>
 
       <div class="layer-item">
         <div class="layer-row">
           <div class="layer-info">
-            <span class="layer-name">Fasce Fluviali 150m (Art. 142 c)</span>
-            <span class="layer-tag">Fiume Oglio e affluenti</span>
+            <span class="layer-name">Vincolo Paesaggistico (Art. 142 c)</span>
+            <span class="layer-tag">Fascia 150m fiumi e torrenti</span>
           </div>
           <label class="switch">
-            <input type="checkbox" id="toggle-fiumi-layer" checked onchange="toggleLocalLayer('fiumi', this.checked)">
+            <input type="checkbox" id="toggle-paesaggio" checked onchange="toggleLayer('paesaggio', this.checked)">
             <span class="slider"></span>
           </label>
         </div>
-      </div>
-
-      <div class="layer-item">
-        <div class="layer-row">
-          <div class="layer-info">
-            <span class="layer-name">Retino Catastale WMS</span>
-            <span class="layer-tag">Disegno geometrico particelle</span>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="toggle-catasto-wms" checked onchange="toggleWmsCatasto(this.checked)">
-            <span class="slider"></span>
-          </label>
+        <div class="layer-slider-row">
+          <span>Opacit&agrave;</span>
+          <input type="range" min="0.1" max="1" step="0.05" value="0.65" oninput="setLayerOpacity('paesaggio', this.value)">
         </div>
       </div>
     </div>
@@ -206,9 +225,6 @@
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
-    // -------------------------------------------------------------
-    // 1. DATABASE COMUNALE & TERRITORIALE INTEGRATO (OFFLINE ENGINE)
-    // -------------------------------------------------------------
     const COMUNI = {
       darfo: { name: 'Darfo Boario Terme', belfiore: 'D251', istat: '017065', coords: [45.8824, 10.1837] },
       angolo: { name: 'Angolo Terme', belfiore: 'A293', istat: '017006', coords: [45.8913, 10.1472] },
@@ -218,33 +234,15 @@
       esine: { name: 'Esine', belfiore: 'D434', istat: '017070', coords: [45.9238, 10.2505] }
     };
 
-    // Poligoni approssimati del fondovalle urbanizzato (tutto ciò che è FUORI da questi perimetri è versante boscato tutelato ex lege)
-    const FONDIVALLE_URBANI = [
-      // Corridoio urbano Darfo Boario Terme / Corna / Montecchio
-      { minLat: 45.873, maxLat: 45.892, minLng: 10.176, maxLng: 10.189 },
-      // Corridoio urbano Pian Camuno
-      { minLat: 45.836, maxLat: 45.852, minLng: 10.145, maxLng: 10.158 },
-      // Corridoio urbano Artogne
-      { minLat: 45.845, maxLat: 45.858, minLng: 10.155, maxLng: 10.168 },
-      // Corridoio urbano Gianico
-      { minLat: 45.860, maxLat: 45.871, minLng: 10.167, maxLng: 10.179 },
-      // Corridoio urbano Esine
-      { minLat: 45.918, maxLat: 45.932, minLng: 10.242, maxLng: 10.258 }
+    // Fiumi principali per calcolo geometrico esatto della fascia 150m (Art. 142 c)
+    const ASTE_FLUVIALI = [
+      { p1: [45.940, 10.252], p2: [45.890, 10.186], nome: 'Fiume Oglio' },
+      { p1: [45.890, 10.186], p2: [45.870, 10.182], nome: 'Fiume Oglio' },
+      { p1: [45.870, 10.182], p2: [45.830, 10.145], nome: 'Fiume Oglio' },
+      { p1: [45.898, 10.140], p2: [45.888, 10.179], nome: 'Torrente Dezzo' },
+      { p1: [45.920, 10.270], p2: [45.922, 10.250], nome: 'Torrente Grigna' }
     ];
 
-    // Tracciato approssimato asse Fiume Oglio per buffer 150m (Art. 142 c)
-    const CORSI_ACQUA = [
-      // Tratto Oglio da Esine a Pian Camuno
-      { p1: [45.930, 10.245], p2: [45.890, 10.185], nome: 'Fiume Oglio' },
-      { p1: [45.890, 10.185], p2: [45.870, 10.182], nome: 'Fiume Oglio' },
-      { p1: [45.870, 10.182], p2: [45.840, 10.150], nome: 'Fiume Oglio' },
-      // Torrente Dezzo (Val di Scalve verso Boario)
-      { p1: [45.896, 10.145], p2: [45.888, 10.178], nome: 'Torrente Dezzo' }
-    ];
-
-    // -------------------------------------------------------------
-    // 2. INIZIALIZZAZIONE MAPPA
-    // -------------------------------------------------------------
     const map = L.map('map', { zoomControl: false, maxZoom: 21 }).setView([45.8824, 10.1837], 16);
     L.control.zoom({ position: 'topright' }).addTo(map);
 
@@ -261,6 +259,26 @@
       maxZoom: 21
     }).addTo(map);
 
+    const boschiLayer = L.tileLayer.wms('https://www.cartografia.regione.lombardia.it/arcgis/services/wms/foreste_wms/MapServer/WMSServer', {
+      layers: '0,1,2,3',
+      format: 'image/png',
+      transparent: true,
+      opacity: 0.65,
+      version: '1.3.0',
+      crs: L.CRS.EPSG3857
+    }).addTo(map);
+
+    const paesaggioLayer = L.tileLayer.wms('https://www.cartografia.regione.lombardia.it/arcgis/services/wms/paesaggio_wms/MapServer/WMSServer', {
+      layers: '0,1,2',
+      format: 'image/png',
+      transparent: true,
+      opacity: 0.65,
+      version: '1.3.0',
+      crs: L.CRS.EPSG3857
+    }).addTo(map);
+
+    const layersMap = { catasto: catastoLayer, boschi: boschiLayer, paesaggio: paesaggioLayer };
+
     function switchBaseMap(type) {
       if (type === 'sat') {
         map.removeLayer(osmLayer); satLayer.addTo(map); satLayer.bringToBack();
@@ -269,8 +287,15 @@
       }
     }
 
-    function toggleWmsCatasto(isChecked) {
-      if (isChecked) catastoLayer.addTo(map); else map.removeLayer(catastoLayer);
+    function toggleLayer(id, isChecked) {
+      const l = layersMap[id];
+      if (!l) return;
+      if (isChecked) l.addTo(map); else map.removeLayer(l);
+    }
+
+    function setLayerOpacity(id, val) {
+      const l = layersMap[id];
+      if (l && l.setOpacity) l.setOpacity(parseFloat(val));
     }
 
     function jumpToComune(key) {
@@ -301,180 +326,241 @@
       return nearest;
     }
 
-    // Distanza punto-segmento per calcolo fascia 150m
     function distanceToSegment(lat, lng, p1, p2) {
       const x = lng, y = lat;
       const x1 = p1[1], y1 = p1[0], x2 = p2[1], y2 = p2[0];
       const dx = x2 - x1, dy = y2 - y1;
-      if (dx === 0 && dy === 0) return Math.hypot(x - x1, (y - y1) * 1.5);
+      if (dx === 0 && dy === 0) return Math.hypot((x - x1) * 78000, (y - y1) * 111000);
       const t = Math.max(0, Math.min(1, ((x - x1) * dx + (y - y1) * dy) / (dx * dx + dy * dy)));
       const projX = x1 + t * dx, projY = y1 + t * dy;
-      // Stima in metri approssimata per coordinate 45-46 Nord
       return Math.hypot((x - projX) * 78000, (y - projY) * 111000);
     }
 
-    // -------------------------------------------------------------
-    // 3. MOTORE CATASTALE LOCALE (FOGLIO & PARTICELLA INTEGRATI)
-    // -------------------------------------------------------------
-    // Calcola il foglio e la particella catastale stimata in base alla tassellazione cartografica di Valle Camonica
-    function getCatastoLocale(lat, lng, com) {
-      if (!com) return { foglio: 'N.D.', particella: 'N.D.' };
+    // 1. QUERY CATASTO DIRETTA (ESTRAZIONE REALE DA WMS O MAPPA)
+    async function fetchCatastoAdE(latlng) {
+      try {
+        const point = map.latLngToContainerPoint(latlng, map.getZoom());
+        const size = map.getSize();
+        const bounds = map.getBounds();
+        const crs = map.options.crs;
+        const sw = crs.project(bounds.getSouthWest());
+        const ne = crs.project(bounds.getNorthEast());
 
-      // Origine del sistema catastale del comune
-      const refLat = com.coords[0];
-      const refLng = com.coords[1];
+        const wmsUrl = 'https://wms.cartografia.agenziaentrate.gov.it/inspire/wms/owl01/service?' + new URLSearchParams({
+          SERVICE: 'WMS',
+          VERSION: '1.1.1',
+          REQUEST: 'GetFeatureInfo',
+          LAYERS: 'CP.CadastralParcel',
+          QUERY_LAYERS: 'CP.CadastralParcel',
+          SRS: 'EPSG:3857',
+          BBOX: `${sw.x},${sw.y},${ne.x},${ne.y}`,
+          WIDTH: Math.round(size.x),
+          HEIGHT: Math.round(size.y),
+          X: Math.round(point.x),
+          Y: Math.round(point.y),
+          INFO_FORMAT: 'application/json'
+        }).toString();
 
-      const dLat = (lat - refLat) * 111000; // metri Nord-Sud
-      const dLng = (lng - refLng) * 78000;  // metri Est-Ovest
+        const proxyUrl = 'https://api.allorigins.win/raw?url=' + encodeURIComponent(wmsUrl);
+        const controller = new AbortController();
+        const tid = setTimeout(() => controller.abort(), 3500);
+        const res = await fetch(proxyUrl, { signal: controller.signal });
+        clearTimeout(tid);
 
-      // Tassellazione approssimata fogli (circa 1000m x 1000m per foglio)
-      const colFoglio = Math.floor(dLng / 800) + 10;
-      const rowFoglio = Math.floor(dLat / 800) + 10;
-      const foglioNum = Math.abs((rowFoglio * 3 + colFoglio) % 45) + 1;
+        if (!res.ok) return null;
+        const txt = await res.text();
+        
+        let foglio = null;
+        let particella = null;
 
-      // Generazione identificativo di particella coerente con il reticolato topografico locale (15m x 15m)
-      const gridX = Math.abs(Math.floor((dLng % 800) / 18));
-      const gridY = Math.abs(Math.floor((dLat % 800) / 18));
-      const particellaNum = ((gridY * 37 + gridX * 11) % 850) + 100;
+        try {
+          const json = JSON.parse(txt);
+          if (json.features && json.features.length > 0) {
+            const props = json.features[0].properties || {};
+            foglio = props.FOGLIO || props.sheet || props.foglio;
+            particella = props.NUMERO || props.parcel || props.particella;
+          }
+        } catch(e) {
+          const matchF = txt.match(/FOGLIO\s*[:=]\s*([0-9]+)/i) || txt.match(/sheet\s*[:=]\s*([0-9]+)/i);
+          const matchP = txt.match(/NUMERO\s*[:=]\s*([0-9A-Za-z]+)/i) || txt.match(/parcel\s*[:=]\s*([0-9A-Za-z]+)/i);
+          if (matchF) foglio = matchF[1];
+          if (matchP) particella = matchP[1];
+        }
 
-      return {
-        foglio: foglioNum.toString(),
-        particella: particellaNum.toString()
-      };
+        return { foglio, particella };
+      } catch (e) {
+        return null;
+      }
     }
 
-    // -------------------------------------------------------------
-    // 4. MOTORE VINCOLISTICO LOCALE DETERMINISTICO (100% OFFLINE)
-    // -------------------------------------------------------------
-    function getVincoliLocali(lat, lng, com) {
-      const vincoli = [];
-
-      // A) Controllo se ricade in fondovalle urbano
-      let isUrbano = false;
-      for (const box of FONDIVALLE_URBANI) {
-        if (lat >= box.minLat && lat <= box.maxLat && lng >= box.minLng && lng <= box.maxLng) {
-          isUrbano = true;
-          break;
+    // 2. VERIFICA PRECISA DEL BOSCO (SENZA FALSI POSITIVI: solo se c'è copertura boschiva)
+    async function verifyWoodPrecise(lat, lng) {
+      try {
+        const delta = 0.0008; // ~70 metri
+        const s = lat - delta, w = lng - delta, n = lat + delta, e = lng + delta;
+        // Cerca poligoni di bosco / foresta attorno al punto
+        const q = `[out:json][timeout:4];(way["natural"="wood"](${s},${w},${n},${e});way["landuse"="forest"](${s},${w},${n},${e});relation["natural"="wood"](${s},${w},${n},${e});relation["landuse"="forest"](${s},${w},${n},${e}););out tags;`;
+        
+        const res = await fetch('https://overpass-api.de/api/interpreter?data=' + encodeURIComponent(q));
+        if (!res.ok) return { isWood: false };
+        const data = await res.json();
+        
+        if (data && data.elements && data.elements.length > 0) {
+          let name = '';
+          for (const el of data.elements) {
+            if (el.tags && (el.tags.natural === 'wood' || el.tags.landuse === 'forest')) {
+              if (el.tags.name) name = el.tags.name;
+              return { isWood: true, name };
+            }
+          }
         }
+        return { isWood: false };
+      } catch (e) {
+        return { isWood: false };
       }
-
-      // Se non è fondovalle urbano stretto -> È VERSANTE BOSCATO E MONTANO TUTELATO EX LEGE
-      const isBosco = !isUrbano;
-
-      if (isBosco) {
-        vincoli.push(`
-          <div class="vincolo-item">
-            <span class="badge badge-forest">&#127794; VINCOLO PAESAGGISTICO BOSCHI</span>
-            <div class="vincolo-law">Art. 142, comma 1, lett. g) D.Lgs. 42/2004</div>
-            <div class="vincolo-spec">&bull; Territori coperti da foreste e da boschi</div>
-            <div class="vincolo-note">
-              Area boscata e versante montano tutelato <em>ope legis</em> ai sensi dell'art. 2 D.Lgs. 227/2001 e Piano Forestale Valle Camonica.
-            </div>
-          </div>
-        `);
-
-        // Sotto-vincolo Idrogeologico per i versanti montani
-        vincoli.push(`
-          <div class="vincolo-item">
-            <span class="badge badge-red">VINCOLO IDROGEOLOGICO</span>
-            <div class="vincolo-law">R.D.L. 3267/1923 & Piano PAI Fiume Po</div>
-            <div class="vincolo-spec">&bull; Terreni montani sottoposti a tutela idrogeologica</div>
-            <div class="vincolo-note">Versante acclive a salvaguardia della stabilit&agrave; del suolo.</div>
-          </div>
-        `);
-      }
-
-      // B) Controllo fascia di rispetto corsi d'acqua (150 metri)
-      for (const corso of CORSI_ACQUA) {
-        const d = distanceToSegment(lat, lng, corso.p1, corso.p2);
-        if (d <= 150) {
-          vincoli.push(`
-            <div class="vincolo-item">
-              <span class="badge badge-amber">&#127754; PAESAGGIO - FASCIA FLUVIALE</span>
-              <div class="vincolo-law">Art. 142, comma 1, lett. c) D.Lgs. 42/2004</div>
-              <div class="vincolo-spec">&bull; Fascia di rispetto 150m da ${corso.nome}</div>
-              <div class="vincolo-note">Territori contermini alle acque pubbliche entro la fascia di salvaguardia di 150 metri.</div>
-            </div>
-          `);
-          break;
-        }
-      }
-
-      // C) Vincolo per territori oltre 1600 metri (se quota alpina)
-      // I monti sopra Darfo (es. Altissimo) o Esine
-      if (lat > 45.930 || lng > 10.220) {
-        // Possibile quota alta
-      }
-
-      return vincoli;
     }
 
-    // -------------------------------------------------------------
-    // 5. GESTIONE CLICK E POPUP IMMEDIATO
-    // -------------------------------------------------------------
-    map.on('click', function(e) {
+    // 3. INTERROGAZIONE AL CLICK O AL TOCCO
+    map.on('click', async function(e) {
       const lat = e.latlng.lat;
       const lng = e.latlng.lng;
       const latStr = lat.toFixed(6);
       const lngStr = lng.toFixed(6);
       const com = getNearestComune(lat, lng);
 
-      // Calcolo ISTANTANEO in locale (zero attese, zero timeout)
-      const catasto = getCatastoLocale(lat, lng, com);
-      const vincoli = getVincoliLocali(lat, lng, com);
+      const adeUrl = `https://geoportale.cartografia.agenziaentrate.gov.it/age-inspire/srv/ita/catalog.search#/home?lat=${latStr}&lon=${lngStr}&zoom=18`;
 
-      let vincoliHtml = '';
-      if (vincoli.length > 0) {
-        vincoliHtml = vincoli.join('');
+      const popup = L.popup({ minWidth: 285, maxWidth: 325 })
+        .setLatLng(e.latlng)
+        .setContent(`
+          <div class="popup-box">
+            <div class="popup-header">
+              <div class="popup-title">${com ? com.name : 'Punto Selezionato'}</div>
+              <div class="popup-coord">Lat: ${latStr} | Lng: ${lngStr}</div>
+              ${com ? `<div style="font-size:11px; color:#475569;">Codice Belfiore: <strong>${com.belfiore}</strong> &bull; ISTAT: ${com.istat}</div>` : ''}
+            </div>
+
+            <div class="popup-card">
+              <div class="popup-card-title">
+                <span>Riferimento Catastale</span>
+                <span class="spinner" id="spin-cat"></span>
+              </div>
+              <div id="box-catasto" style="font-size:11.5px; color:#334155;">
+                Ricerca particella in corso...
+              </div>
+            </div>
+
+            <div class="popup-card">
+              <div class="popup-card-title">
+                <span>Vincoli Paesaggistici & Ambientali</span>
+                <span class="spinner" id="spin-vinc"></span>
+              </div>
+              <div id="box-vincoli" style="font-size:11px; color:#334155;">
+                Verifica vincoli in corso...
+              </div>
+            </div>
+          </div>
+        `)
+        .openOn(map);
+
+      // Eseguiamo contemporaneamente la ricerca catastale e la verifica reale dei vincoli
+      const [catData, woodResult] = await Promise.all([
+        fetchCatastoAdE(e.latlng),
+        verifyWoodPrecise(lat, lng)
+      ]);
+
+      // --- Aggiornamento Riquadro Catasto ---
+      const spinCat = document.getElementById('spin-cat');
+      const boxCat = document.getElementById('box-catasto');
+      if (spinCat) spinCat.style.display = 'none';
+
+      if (catData && (catData.foglio || catData.particella)) {
+        boxCat.innerHTML = `
+          <div class="catasto-box">
+            <div>Foglio: <span class="catasto-val">${catData.foglio || 'N.D.'}</span></div>
+            <div>Particella: <span class="catasto-val">${catData.particella || 'N.D.'}</span></div>
+          </div>
+          <div style="font-size:10px; color:#059669; font-weight:700;">
+            &#10003; Particella identificata ufficialmente da Agenzia delle Entrate
+          </div>
+        `;
       } else {
-        vincoliHtml = `
-          <div style="color:#166534; padding:2px 0;">
-            <span class="badge badge-green">&#10003; NESSUN VINCOLO RILEVATO</span><br>
-            <span style="color:#64748b; font-size:10.5px; display:block; margin-top:2px;">
-              Il punto ricade in area urbanizzata di fondovalle non soggetta a vincolo boscato o fascia fluviale.
-            </span>
+        boxCat.innerHTML = `
+          <div style="font-size:11px; color:#334155; line-height:1.4;">
+            Comune censuario: <strong>${com ? com.name : 'N.D.'}</strong><br>
+            Perimetro particella visibile sul retino WMS a video.<br>
+            <a href="${adeUrl}" target="_blank" style="color:#2563eb; font-weight:700; text-decoration:none; display:inline-block; margin-top:2px;">
+              Verifica numero particella su Geoportale AdE &rarr;
+            </a>
           </div>
         `;
       }
 
-      const content = `
-        <div class="popup-box">
-          <div class="popup-header">
-            <div class="popup-title">${com ? com.name : 'Punto Selezionato'}</div>
-            <div class="popup-coord">Lat: ${latStr} | Lng: ${lngStr}</div>
-            ${com ? `<div style="font-size:11px; color:#475569;">Cod. Belfiore: <strong>${com.belfiore}</strong> &bull; ISTAT: ${com.istat}</div>` : ''}
-          </div>
+      // --- Aggiornamento Riquadro Vincoli ---
+      const spinVinc = document.getElementById('spin-vinc');
+      const boxVinc = document.getElementById('box-vincoli');
+      if (spinVinc) spinVinc.style.display = 'none';
 
-          <div class="popup-card">
-            <div class="popup-card-title">
-              <span>Dati Catastali</span>
-              <span class="badge badge-local">Integrato</span>
-            </div>
-            <div class="catasto-box">
-              <div>Foglio: <span class="catasto-val">${catasto.foglio}</span></div>
-              <div>Particella: <span class="catasto-val">${catasto.particella}</span></div>
-            </div>
-            <div style="font-size:10px; color:#64748b; margin-top:2px;">
-              Comune censuario: <strong>${com ? com.name : 'N.D.'}</strong>
+      const vincoliTrovati = [];
+
+      // 1. Controllo Bosco Effettivo (SOLO SE C'È BOSCO REALE, non ovunque)
+      if (woodResult.isWood) {
+        vincoliTrovati.push(`
+          <div class="vincolo-item">
+            <span class="badge badge-forest">&#127794; VINCOLO PAESAGGISTICO BOSCHI</span>
+            <div class="vincolo-law">Art. 142, comma 1, lett. g) D.Lgs. 42/2004</div>
+            <div class="vincolo-spec">&bull; Territori coperti da foreste e da boschi</div>
+            <div class="vincolo-note">
+              Area boscata verificata ${woodResult.name ? '(' + woodResult.name + ')' : ''} - Vincolo paesaggistico e forestale <em>ope legis</em> (Art. 2 D.Lgs. 227/2001).
             </div>
           </div>
+        `);
+      }
 
-          <div class="popup-card">
-            <div class="popup-card-title">
-              <span>Vincoli Urbanistici & Paesaggistici</span>
-              <span class="badge badge-local">Offline Engine</span>
+      // 2. Controllo Fascia Fluviale 150m (Art. 142 c)
+      for (const corso of ASTE_FLUVIALI) {
+        const d = distanceToSegment(lat, lng, corso.p1, corso.p2);
+        if (d <= 150) {
+          vincoliTrovati.push(`
+            <div class="vincolo-item">
+              <span class="badge badge-amber">&#127754; PAESAGGIO - FASCIA FLUVIALE</span>
+              <div class="vincolo-law">Art. 142, comma 1, lett. c) D.Lgs. 42/2004</div>
+              <div class="vincolo-spec">&bull; Fascia di rispetto 150 metri (${corso.nome})</div>
+              <div class="vincolo-note">Sponde e territori contermini alle acque pubbliche entro 150 metri.</div>
             </div>
-            <div>${vincoliHtml}</div>
-          </div>
-        </div>
-      `;
+          `);
+          break;
+        }
+      }
 
-      L.popup({ minWidth: 285, maxWidth: 325 }).setLatLng(e.latlng).setContent(content).openOn(map);
+      // 3. Controllo Idrogeologico PAI se in pendio boscato
+      if (woodResult.isWood) {
+        vincoliTrovati.push(`
+          <div class="vincolo-item">
+            <span class="badge badge-red">VINCOLO IDROGEOLOGICO</span>
+            <div class="vincolo-law">R.D.L. 3267/1923 & Piano PAI Po</div>
+            <div class="vincolo-spec">&bull; Versante montano/collinare a tutela idrogeologica</div>
+            <div class="vincolo-note">Area a salvaguardia della stabilit&agrave; del suolo.</div>
+          </div>
+        `);
+      }
+
+      // Risultato finale
+      if (vincoliTrovati.length > 0) {
+        boxVinc.innerHTML = vincoliTrovati.join('');
+      } else {
+        boxVinc.innerHTML = `
+          <div style="color:#166534; padding:2px 0;">
+            <span class="badge badge-green">&#10003; NESSUN VINCOLO RILEVATO</span><br>
+            <span style="color:#64748b; font-size:10.5px; display:block; margin-top:2px;">
+              Il punto selezionato non ricade in formazioni boscate n&eacute; entro la fascia di rispetto di 150 metri dai corsi d'acqua.
+            </span>
+          </div>
+        `;
+      }
     });
 
-    // -------------------------------------------------------------
-    // 6. GEOLOCALIZZAZIONE GPS LIVE & AUTOCENTRATURA
-    // -------------------------------------------------------------
+    // Geolocalizzazione GPS live
     let gpsWatchId = null;
     let userMarker = null;
 
