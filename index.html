@@ -76,7 +76,7 @@
 
     /* Custom Popup */
     .leaflet-popup-content-wrapper { border-radius: 14px; padding: 2px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
-    .popup-box { font-size: 12px; line-height: 1.45; max-width: 300px; color: #1e293b; }
+    .popup-box { font-size: 12px; line-height: 1.45; max-width: 310px; color: #1e293b; }
     .popup-header { border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 6px; }
     .popup-title { font-weight: 700; font-size: 13px; color: #0f172a; }
     .popup-coord { font-family: monospace; font-size: 11px; color: #64748b; }
@@ -87,15 +87,15 @@
     .badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin: 2px 2px 2px 0; }
     .badge-red { background: #fee2e2; color: #991b1b; }
     .badge-amber { background: #fef3c7; color: #92400e; }
-    .badge-blue { background: #dbeafe; color: #1e40af; }
     .badge-green { background: #dcfce7; color: #166534; }
-    .badge-purple { background: #ede9fe; color: #5b21b6; }
+    .badge-forest { background: #d1fae5; color: #065f46; border: 1px solid #a7f3d0; }
+    .badge-blue { background: #dbeafe; color: #1e40af; }
 
-    .vincolo-item { margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px dashed #e2e8f0; }
+    .vincolo-item { margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px dashed #cbd5e1; }
     .vincolo-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
     .vincolo-law { font-weight: 700; color: #0f172a; font-size: 11.5px; }
-    .vincolo-spec { color: #b45309; font-weight: 600; font-size: 11px; margin-top: 1px; }
-    .vincolo-note { font-size: 10.5px; color: #475569; margin-top: 1px; }
+    .vincolo-spec { color: #047857; font-weight: 700; font-size: 11.5px; margin-top: 1px; }
+    .vincolo-note { font-size: 10.5px; color: #475569; margin-top: 2px; }
 
     .spinner {
       display: inline-block; width: 12px; height: 12px; border: 2px solid #cbd5e1;
@@ -154,12 +154,12 @@
         </div>
       </div>
 
-      <div class="layer-group-title">Catasto Ufficiale Agenzia Entrate</div>
+      <div class="layer-group-title">Mappa Catastale</div>
       <div class="layer-item">
         <div class="layer-row">
           <div class="layer-info">
-            <span class="layer-name">Particelle, Fogli e Retino</span>
-            <span class="layer-tag">Confini mappali + Fabbricati</span>
+            <span class="layer-name">Confini Particelle & Mappali</span>
+            <span class="layer-tag">WMS Catasto Ufficiale</span>
           </div>
           <label class="switch">
             <input type="checkbox" id="toggle-catasto" checked onchange="toggleLayer('catasto', this.checked)">
@@ -172,29 +172,29 @@
         </div>
       </div>
 
-      <div class="layer-group-title">Vincoli Ambientali (Regione Lombardia)</div>
+      <div class="layer-group-title">Vincoli Ambientali & Boschi</div>
       <div class="layer-item">
         <div class="layer-row">
           <div class="layer-info">
-            <span class="layer-name">Vincolo Idrogeologico / PAI Po</span>
-            <span class="layer-tag">Fasce fluviali Oglio, dissesto e frane</span>
+            <span class="layer-name">Boschi & Foreste (Art. 142 lett. g)</span>
+            <span class="layer-tag">Carta Forestale & DUSAF Regione Lombardia</span>
           </div>
           <label class="switch">
-            <input type="checkbox" id="toggle-pai" checked onchange="toggleLayer('pai', this.checked)">
+            <input type="checkbox" id="toggle-boschi" checked onchange="toggleLayer('boschi', this.checked)">
             <span class="slider"></span>
           </label>
         </div>
         <div class="layer-slider-row">
           <span>Opacit&agrave;</span>
-          <input type="range" min="0.1" max="1" step="0.05" value="0.65" oninput="setLayerOpacity('pai', this.value)">
+          <input type="range" min="0.1" max="1" step="0.05" value="0.6" oninput="setLayerOpacity('boschi', this.value)">
         </div>
       </div>
 
       <div class="layer-item">
         <div class="layer-row">
           <div class="layer-info">
-            <span class="layer-name">Vincolo Paesaggistico (Art. 142 & 136)</span>
-            <span class="layer-tag">Fascia 150m fiumi, boschi, montagne, bellezze</span>
+            <span class="layer-name">Vincolo Paesaggistico (D.Lgs 42/04)</span>
+            <span class="layer-tag">Fascia 150m fiumi, laghi, crinali</span>
           </div>
           <label class="switch">
             <input type="checkbox" id="toggle-paesaggio" checked onchange="toggleLayer('paesaggio', this.checked)">
@@ -203,7 +203,24 @@
         </div>
         <div class="layer-slider-row">
           <span>Opacit&agrave;</span>
-          <input type="range" min="0.1" max="1" step="0.05" value="0.65" oninput="setLayerOpacity('paesaggio', this.value)">
+          <input type="range" min="0.1" max="1" step="0.05" value="0.6" oninput="setLayerOpacity('paesaggio', this.value)">
+        </div>
+      </div>
+
+      <div class="layer-item">
+        <div class="layer-row">
+          <div class="layer-info">
+            <span class="layer-name">Vincolo Idrogeologico / PAI Po</span>
+            <span class="layer-tag">Pericolosit&agrave; idraulica e dissesto</span>
+          </div>
+          <label class="switch">
+            <input type="checkbox" id="toggle-pai" checked onchange="toggleLayer('pai', this.checked)">
+            <span class="slider"></span>
+          </label>
+        </div>
+        <div class="layer-slider-row">
+          <span>Opacit&agrave;</span>
+          <input type="range" min="0.1" max="1" step="0.05" value="0.6" oninput="setLayerOpacity('pai', this.value)">
         </div>
       </div>
     </div>
@@ -221,13 +238,13 @@
       esine: { name: 'Esine', belfiore: 'D434', coords: [45.9238, 10.2505] }
     };
 
-    // Vista di default temporanea (Darfo Boario Terme)
     const map = L.map('map', { zoomControl: false, maxZoom: 21 }).setView([45.8824, 10.1837], 16);
     L.control.zoom({ position: 'topright' }).addTo(map);
 
     const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 21 }).addTo(map);
     const satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 21 });
 
+    // WMS Catasto
     const catastoLayer = L.tileLayer.wms('https://wms.cartografia.agenziaentrate.gov.it/inspire/wms/owl01/service', {
       layers: 'CP.CadastralZoning,CP.CadastralParcel',
       format: 'image/png',
@@ -238,14 +255,18 @@
       maxZoom: 21
     }).addTo(map);
 
-    const REST_PAI_URL = 'https://www.cartografia.regione.lombardia.it/arcgis/rest/services/wms/difesa_suolo_wms/MapServer';
+    // Endpoint ArcGIS REST di Regione Lombardia per Vincoli e Boschi
     const REST_PAESAGGIO_URL = 'https://www.cartografia.regione.lombardia.it/arcgis/rest/services/wms/paesaggio_wms/MapServer';
+    const REST_FORESTE_URL = 'https://www.cartografia.regione.lombardia.it/arcgis/rest/services/wms/foreste_wms/MapServer';
+    const REST_DUSAF_URL = 'https://www.cartografia.regione.lombardia.it/arcgis/rest/services/wms/dusaf_wms/MapServer';
+    const REST_PAI_URL = 'https://www.cartografia.regione.lombardia.it/arcgis/rest/services/wms/difesa_suolo_wms/MapServer';
 
-    const paiLayer = L.tileLayer.wms('https://www.cartografia.regione.lombardia.it/arcgis/services/wms/difesa_suolo_wms/MapServer/WMSServer', {
+    // Layer WMS Boschi & Foreste Regione Lombardia
+    const boschiLayer = L.tileLayer.wms('https://www.cartografia.regione.lombardia.it/arcgis/services/wms/foreste_wms/MapServer/WMSServer', {
       layers: '0,1,2,3',
       format: 'image/png',
       transparent: true,
-      opacity: 0.65,
+      opacity: 0.6,
       version: '1.3.0',
       crs: L.CRS.EPSG3857
     }).addTo(map);
@@ -254,12 +275,21 @@
       layers: '0,1,2',
       format: 'image/png',
       transparent: true,
-      opacity: 0.65,
+      opacity: 0.6,
       version: '1.3.0',
       crs: L.CRS.EPSG3857
     }).addTo(map);
 
-    const layersMap = { catasto: catastoLayer, pai: paiLayer, paesaggio: paesaggioLayer };
+    const paiLayer = L.tileLayer.wms('https://www.cartografia.regione.lombardia.it/arcgis/services/wms/difesa_suolo_wms/MapServer/WMSServer', {
+      layers: '0,1,2,3',
+      format: 'image/png',
+      transparent: true,
+      opacity: 0.6,
+      version: '1.3.0',
+      crs: L.CRS.EPSG3857
+    }).addTo(map);
+
+    const layersMap = { catasto: catastoLayer, boschi: boschiLayer, paesaggio: paesaggioLayer, pai: paiLayer };
 
     function switchBaseMap(type) {
       if (type === 'sat') {
@@ -308,7 +338,8 @@
       return nearest;
     }
 
-    async function queryArcGisIdentify(baseUrl, latlng) {
+    // Query generica ArcGIS REST Identify
+    async function queryArcGisIdentify(baseUrl, latlng, tolerance = 10) {
       try {
         const bounds = map.getBounds();
         const size = map.getSize();
@@ -319,7 +350,7 @@
           geometryType: 'esriGeometryPoint',
           sr: '4326',
           layers: 'all',
-          tolerance: '8',
+          tolerance: tolerance.toString(),
           mapExtent: mapExtent,
           imageDisplay: `${size.x},${size.y},96`,
           returnGeometry: 'false',
@@ -335,50 +366,7 @@
       }
     }
 
-    function decodeVincoloPaesaggio(r) {
-      const attrs = r.attributes || {};
-      const layer = (r.layerName || '').toLowerCase();
-      const txt = JSON.stringify(attrs).toLowerCase();
-
-      let titolo = "Vincolo Paesaggistico (D.Lgs. 42/2004)";
-      let articolo = "Art. 142 D.Lgs. 42/2004";
-      let specifico = "Fascia tutelata per legge";
-      let dettaglio = "";
-
-      if (layer.includes('cors') || layer.includes('fium') || layer.includes('acq') || txt.includes('142_c') || txt.includes('fiume') || txt.includes('torrente') || txt.includes('acque') || txt.includes('150')) {
-        articolo = "Art. 142, comma 1, lett. c)";
-        specifico = "Fiumi, torrenti e corsi d'acqua iscritti (Fascia di rispetto 150m)";
-        dettaglio = "Sponde e territori contermini al fiume Oglio o corsi d'acqua pubblici entro 150 metri.";
-      } else if (layer.includes('bosc') || layer.includes('forest') || txt.includes('142_g') || txt.includes('bosco') || txt.includes('foresta') || txt.includes('boscate')) {
-        articolo = "Art. 142, comma 1, lett. g)";
-        specifico = "Territori coperti da foreste e da boschi";
-        dettaglio = "Aree boscate e pendii forestali tutelati per legge (art. 2 D.Lgs. 227/2001).";
-      } else if (layer.includes('mont') || txt.includes('142_d') || txt.includes('1600') || txt.includes('quota') || txt.includes('alp')) {
-        articolo = "Art. 142, comma 1, lett. d)";
-        specifico = "Montagne per la parte eccedente 1.600 metri s.l.m.";
-        dettaglio = "Aree montane alpine di quota superiore a 1.600 m slm.";
-      } else if (layer.includes('lag') || txt.includes('142_b') || txt.includes('300') || txt.includes('iseo') || txt.includes('moro')) {
-        articolo = "Art. 142, comma 1, lett. b)";
-        specifico = "Territori contermini ai laghi (Fascia di rispetto 300m)";
-        dettaglio = "Fascia di 300 metri dalla linea di battigia del bacino lacuale.";
-      } else if (layer.includes('136') || layer.includes('monum') || layer.includes('bellezz') || txt.includes('136') || txt.includes('dichiarazione') || txt.includes('notevole interesse')) {
-        titolo = "Vincolo Paesaggistico da Decreto (D.Lgs. 42/2004)";
-        articolo = "Art. 136 (ex L. 1497/1939)";
-        specifico = "Immobili ed aree di notevole interesse pubblico (Bellezze individue / d'insieme)";
-        const descDecreto = attrs.DENOMINAZIONE || attrs.NOME || attrs.OGGETTO || attrs.DESCRIZIONE || '';
-        dettaglio = descDecreto ? `Decreto: ${descDecreto}` : "Aree tutelate con formale provvedimento di notevole interesse pubblico.";
-      } else if (layer.includes('parc') || layer.includes('riserv') || txt.includes('142_f') || txt.includes('plis')) {
-        articolo = "Art. 142, comma 1, lett. f)";
-        specifico = "Parchi, riserve naturali e PLIS sovracomunali";
-        dettaglio = "Aree protette regionali o parchi locali di interesse sovracomunale.";
-      } else {
-        const descGen = attrs.TIPO || attrs.LEGENDA || attrs.DESCRIZIONE || r.layerName || '';
-        if (descGen) dettaglio = `Dettaglio strato: ${descGen}`;
-      }
-
-      return { titolo, articolo, specifico, dettaglio };
-    }
-
+    // Interrogazione al tocco sulla mappa
     map.on('click', async function(e) {
       const lat = e.latlng.lat;
       const lng = e.latlng.lng;
@@ -386,75 +374,115 @@
       const lngStr = lng.toFixed(6);
       const com = getNearestComune(lat, lng);
 
-      const popup = L.popup({ minWidth: 270, maxWidth: 320 })
+      const popup = L.popup({ minWidth: 280, maxWidth: 320 })
         .setLatLng(e.latlng)
         .setContent(`
           <div class="popup-box">
             <div class="popup-header">
               <div class="popup-title">${com ? com.name : 'Punto Selezionato'}</div>
               <div class="popup-coord">Lat: ${latStr} | Lng: ${lngStr}</div>
-              ${com ? `<div style="font-size:11px; color:#475569;">Cod. Belfiore: <strong>${com.belfiore}</strong></div>` : ''}
+              ${com ? `<div style="font-size:11px; color:#475569;">Codice Belfiore: <strong>${com.belfiore}</strong></div>` : ''}
             </div>
 
             <div class="popup-card">
               <div class="popup-card-title">
-                <span>Riferimento Mappale</span>
-                <span class="badge badge-blue">WMS Catasto</span>
-              </div>
-              <div style="font-size:11px; color:#334155;">
-                Comune: <strong>${com ? com.name : 'N.D.'}</strong><br>
-                Particelle e fabbricati visibili dal retino.<br>
-                <a href="https://geoportale.cartografia.agenziaentrate.gov.it/age-inspire/srv/ita/catalog.search#/home" target="_blank" style="color:#2563eb; font-weight:700;">
-                  Apri Geoportale Catasto AdE &rarr;
-                </a>
-              </div>
-            </div>
-
-            <div class="popup-card">
-              <div class="popup-card-title">
-                <span>Vincolistica Paesaggistica & PAI</span>
+                <span>Vincoli Paesaggistici & Ambientali</span>
                 <span class="spinner" id="spin-vinc"></span>
               </div>
               <div id="box-vincoli" style="font-size:11px; color:#334155;">
-                Identificazione tipologia vincoli in corso...
+                Verifica boschi, corsi d'acqua e vincoli in corso...
               </div>
             </div>
           </div>
         `)
         .openOn(map);
 
-      const [paiResults, paesaggioResults] = await Promise.all([
-        queryArcGisIdentify(REST_PAI_URL, e.latlng),
-        queryArcGisIdentify(REST_PAESAGGIO_URL, e.latlng)
+      // Eseguiamo la query contemporanea su TUTTI i server dedicati di Regione Lombardia:
+      // 1. Paesaggio (D.Lgs 42/04)
+      // 2. Foreste e Boschi (Carta Forestale Regionale)
+      // 3. DUSAF Uso del Suolo (per rilevazione immediata uso forestale / boscato)
+      // 4. PAI Difesa Suolo
+      const [paesaggioRes, foresteRes, dusafRes, paiRes] = await Promise.all([
+        queryArcGisIdentify(REST_PAESAGGIO_URL, e.latlng, 10),
+        queryArcGisIdentify(REST_FORESTE_URL, e.latlng, 10),
+        queryArcGisIdentify(REST_DUSAF_URL, e.latlng, 10),
+        queryArcGisIdentify(REST_PAI_URL, e.latlng, 10)
       ]);
 
       let vincoliTrovati = [];
+      let boscoRilevato = false;
 
-      if (paesaggioResults && paesaggioResults.length > 0) {
-        paesaggioResults.forEach(r => {
-          const info = decodeVincoloPaesaggio(r);
+      // 1. Controllo Boschi / Foreste da Carta Forestale Regionale o DUSAF
+      const allForestRecords = [...foresteRes, ...dusafRes];
+      for (const r of allForestRecords) {
+        const str = JSON.stringify(r).toLowerCase();
+        if (str.includes('bosc') || str.includes('forest') || str.includes('latifoglie') || str.includes('conifere') || str.includes('vegetazione forestale') || str.includes('castagnet') || str.includes('cedu')) {
+          boscoRilevato = true;
+          const tipoBosco = (r.attributes && (r.attributes.LEGENDA || r.attributes.NOME || r.attributes.DESCRIZIONE || r.attributes.USO_SUOLO || r.layerName)) || 'Formazione forestale censita';
           vincoliTrovati.push(`
             <div class="vincolo-item">
-              <span class="badge badge-amber">PAESAGGIO</span>
-              <span class="vincolo-law">${info.articolo}</span>
-              <div class="vincolo-spec">&bull; ${info.specifico}</div>
-              <div class="vincolo-note">${info.dettaglio}</div>
+              <span class="badge badge-forest">VINCOLO PAESAGGISTICO EX LEGE</span>
+              <div class="vincolo-law">Art. 142, comma 1, lett. g) D.Lgs. 42/2004</div>
+              <div class="vincolo-spec">&bull; Territori coperti da foreste e da boschi</div>
+              <div class="vincolo-note">Tipologia: <strong>${tipoBosco}</strong> (Art. 2 D.Lgs. 227/2001 - Vincolo paesaggistico e forestale ope legis).</div>
             </div>
           `);
+          break;
+        }
+      }
+
+      // 2. Controllo Vincoli Paesaggistici (Corsi d'acqua, fasce 150m, laghi, art. 136)
+      if (paesaggioRes && paesaggioRes.length > 0) {
+        paesaggioRes.forEach(r => {
+          const str = JSON.stringify(r).toLowerCase();
+          const attrs = r.attributes || {};
+          const nomeLayer = r.layerName || 'Vincolo Paesaggistico';
+
+          if (str.includes('cors') || str.includes('fium') || str.includes('acq') || str.includes('150')) {
+            vincoliTrovati.push(`
+              <div class="vincolo-item">
+                <span class="badge badge-amber">PAESAGGIO</span>
+                <div class="vincolo-law">Art. 142, comma 1, lett. c) D.Lgs. 42/2004</div>
+                <div class="vincolo-spec">&bull; Fascia di rispetto fluviale 150 metri</div>
+                <div class="vincolo-note">Sponde e territori contermini a fiumi, torrenti o corsi d'acqua pubblici entro 150 metri.</div>
+              </div>
+            `);
+          } else if (str.includes('136') || str.includes('bellezz') || str.includes('notevole')) {
+            const decr = attrs.DENOMINAZIONE || attrs.NOME || attrs.DESCRIZIONE || '';
+            vincoliTrovati.push(`
+              <div class="vincolo-item">
+                <span class="badge badge-amber">PAESAGGIO DA DECRETO</span>
+                <div class="vincolo-law">Art. 136 D.Lgs. 42/2004</div>
+                <div class="vincolo-spec">&bull; Notevole interesse pubblico / Bellezza d'insieme</div>
+                <div class="vincolo-note">${decr ? 'Decreto: ' + decr : 'Area vincolata con formale provvedimento.'}</div>
+              </div>
+            `);
+          } else if (!boscoRilevato && (str.includes('bosc') || str.includes('forest'))) {
+            boscoRilevato = true;
+            vincoliTrovati.push(`
+              <div class="vincolo-item">
+                <span class="badge badge-forest">VINCOLO PAESAGGISTICO EX LEGE</span>
+                <div class="vincolo-law">Art. 142, comma 1, lett. g) D.Lgs. 42/2004</div>
+                <div class="vincolo-spec">&bull; Territori coperti da foreste e da boschi</div>
+                <div class="vincolo-note">Vincolo paesaggistico ope legis per presenza di copertura forestale.</div>
+              </div>
+            `);
+          }
         });
       }
 
-      if (paiResults && paiResults.length > 0) {
-        paiResults.forEach(r => {
-          const nomeLayer = r.layerName || 'Pericolosità PAI';
+      // 3. Controllo Dissesto PAI
+      if (paiRes && paiRes.length > 0) {
+        paiRes.forEach(r => {
+          const nomeLayer = r.layerName || 'Dissesto PAI';
           const attrs = r.attributes || {};
-          const desc = attrs.CLASSE || attrs.LEGENDA || attrs.NOME || attrs.TIPO || attrs.PERICOLOSITA || '';
+          const desc = attrs.CLASSE || attrs.LEGENDA || attrs.PERICOLOSITA || '';
           vincoliTrovati.push(`
             <div class="vincolo-item">
               <span class="badge badge-red">PAI IDROGEOLOGICO</span>
-              <span class="vincolo-law">${nomeLayer}</span>
-              <div class="vincolo-spec">&bull; Area a pericolosità/dissesto fluviale o versante</div>
-              ${desc ? `<div class="vincolo-note">Classe: <strong>${desc}</strong> (Autorità di Bacino Fiume Po)</div>` : ''}
+              <div class="vincolo-law">${nomeLayer}</div>
+              <div class="vincolo-spec">&bull; Rischio idraulico o frana</div>
+              ${desc ? `<div class="vincolo-note">Grado: <strong>${desc}</strong> (Autorità di Bacino Fiume Po)</div>` : ''}
             </div>
           `);
         });
@@ -468,7 +496,7 @@
           <div style="color:#166534; padding:2px 0;">
             <span class="badge badge-green">&#10003; NESSUN VINCOLO RILEVATO</span><br>
             <span style="color:#64748b; font-size:10.5px; display:block; margin-top:2px;">
-              Il punto non ricade nella fascia 150m da fiumi, boschi o aree a vincolo paesaggistico/idrogeologico censite.
+              Il punto non ricade in aree boscate, fasce fluviali o vincoli censiti su banche dati regionali.
             </span>
           </div>
         `;
@@ -480,13 +508,13 @@
       if (boxVinc) boxVinc.innerHTML = vincoliHtml;
     });
 
-    // Gestione GPS live
+    // Gestione GPS live con autocentratura
     let gpsWatchId = null;
     let userMarker = null;
 
     function startGPS(autoCentering = false) {
       if (!('geolocation' in navigator)) {
-        if (!autoCentering) alert('Geolocalizzazione non supportata su questo dispositivo.');
+        if (!autoCentering) alert('Geolocalizzazione non supportata.');
         document.getElementById('zone-status').innerText = 'Valle Camonica';
         return;
       }
@@ -515,7 +543,6 @@
               fillOpacity: 1
             }).addTo(map);
 
-            // Centratura automatica all'avvio con zoom a scala particellare
             map.setView(latlng, 18);
             showToast('Centrato sulla tua posizione!');
           } else {
@@ -528,7 +555,6 @@
           });
         },
         err => {
-          console.warn('Errore GPS:', err.message);
           btn.classList.remove('gps-active');
           document.getElementById('zone-status').innerText = 'Valle Camonica';
           if (!autoCentering) showToast('Errore GPS: ' + err.message);
@@ -551,7 +577,6 @@
       startGPS(false);
     }
 
-    // AVVIO AUTOMATICO: non appena la pagina viene aperta, attiva il GPS e centra la mappa
     window.addEventListener('DOMContentLoaded', () => {
       startGPS(true);
     });
