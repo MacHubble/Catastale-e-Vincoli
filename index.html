@@ -6,7 +6,7 @@
   <title>Mappa Catasto & Vincoli - Val Camonica</title>
   
   <!-- Leaflet CSS -->
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin=""/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   
   <style>
     * {
@@ -19,7 +19,7 @@
       width: 100%;
       height: 100%;
       overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
       background: #1a1a1a;
       color: #333;
     }
@@ -29,7 +29,6 @@
       z-index: 1;
     }
     
-    /* Top Header Bar */
     .top-bar {
       position: absolute;
       top: 12px;
@@ -72,10 +71,8 @@
       color: #0f172a;
       outline: none;
       box-shadow: 0 4px 14px rgba(0,0,0,0.15);
-      backdrop-filter: blur(8px);
     }
 
-    /* Floating Action Buttons */
     .fab-container {
       position: absolute;
       bottom: 24px;
@@ -112,7 +109,6 @@
       fill: currentColor;
     }
 
-    /* Layer Drawer / Panel */
     .drawer {
       position: absolute;
       bottom: 0;
@@ -140,27 +136,15 @@
       justify-content: space-between;
       border-bottom: 1px solid #e2e8f0;
     }
-    .drawer-handle {
-      width: 36px;
-      height: 4px;
-      background: #cbd5e1;
-      border-radius: 2px;
-      position: absolute;
-      top: 8px;
-      left: 50%;
-      transform: translateX(-50%);
-    }
     .drawer-title {
       font-size: 16px;
       font-weight: 700;
       color: #0f172a;
-      margin-top: 6px;
     }
     .drawer-close {
       background: transparent;
       border: none;
       font-size: 22px;
-      line-height: 1;
       color: #64748b;
       cursor: pointer;
       padding: 4px 8px;
@@ -177,9 +161,6 @@
       color: #64748b;
       font-weight: 700;
       margin: 14px 0 8px;
-    }
-    .layer-group-title:first-child {
-      margin-top: 0;
     }
     .layer-item {
       display: flex;
@@ -222,7 +203,6 @@
       accent-color: #2563eb;
     }
 
-    /* Switch toggle */
     .switch {
       position: relative;
       display: inline-block;
@@ -230,11 +210,7 @@
       height: 24px;
       flex-shrink: 0;
     }
-    .switch input {
-      opacity: 0;
-      width: 0;
-      height: 0;
-    }
+    .switch input { opacity: 0; width: 0; height: 0; }
     .slider {
       position: absolute;
       cursor: pointer;
@@ -254,32 +230,9 @@
       transition: .25s;
       border-radius: 50%;
     }
-    input:checked + .slider {
-      background-color: #2563eb;
-    }
-    input:checked + .slider:before {
-      transform: translateX(20px);
-    }
+    input:checked + .slider { background-color: #2563eb; }
+    input:checked + .slider:before { transform: translateX(20px); }
 
-    /* Info Badge bottom left */
-    .info-hud {
-      position: absolute;
-      bottom: 24px;
-      left: 16px;
-      z-index: 999;
-      background: rgba(15, 23, 42, 0.85);
-      color: #fff;
-      padding: 8px 14px;
-      border-radius: 12px;
-      font-size: 11px;
-      font-family: monospace;
-      backdrop-filter: blur(6px);
-      max-width: 200px;
-      line-height: 1.4;
-      pointer-events: none;
-    }
-    
-    /* Notification pill */
     .toast {
       position: absolute;
       top: 70px;
@@ -294,56 +247,12 @@
       pointer-events: none;
       transition: all 0.3s ease;
       z-index: 2000;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     }
     .toast.show {
       opacity: 1;
       transform: translateX(-50%) translateY(0);
     }
 
-    /* Popup Styling */
-    .leaflet-popup-content-wrapper {
-      border-radius: 16px;
-      padding: 4px;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.28);
-    }
-    .query-popup {
-      font-size: 12px;
-      line-height: 1.4;
-      max-width: 290px;
-      color: #1e293b;
-    }
-    .query-popup-header {
-      padding-bottom: 8px;
-      margin-bottom: 8px;
-      border-bottom: 1px solid #e2e8f0;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    .query-popup-title {
-      font-weight: 700;
-      font-size: 13px;
-      color: #0f172a;
-    }
-    .query-section {
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      padding: 8px 10px;
-      margin-bottom: 8px;
-    }
-    .query-section-title {
-      font-size: 10px;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: #64748b;
-      margin-bottom: 4px;
-      display: flex;
-      align-items: center;
-      gap: 4px;
-    }
     .badge-tag {
       display: inline-block;
       font-size: 10px;
@@ -357,27 +266,10 @@
     .badge-vincolo-warn { background: #fee2e2; color: #991b1b; }
     .badge-vincolo-ok { background: #dcfce7; color: #166534; }
     .badge-paesaggio { background: #fef3c7; color: #92400e; }
-    .badge-natura { background: #ede9fe; color: #5b21b6; }
-    
-    .loading-spinner {
-      display: inline-block;
-      width: 12px;
-      height: 12px;
-      border: 2px solid #cbd5e1;
-      border-top-color: #2563eb;
-      border-radius: 50%;
-      animation: spin 0.8s linear infinite;
-      vertical-align: middle;
-      margin-left: 6px;
-    }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
-    }
   </style>
 </head>
 <body>
 
-  <!-- Top bar with info and jump to commune -->
   <div class="top-bar">
     <div class="top-badge">
       <span class="status-dot"></span>
@@ -394,72 +286,44 @@
     </select>
   </div>
 
-  <div id="toast" class="toast">Posizione acquisita</div>
-
-  <!-- Map container -->
+  <div id="toast" class="toast">Notifica</div>
   <div id="map"></div>
 
-  <!-- Info HUD -->
-  <div class="info-hud" id="hud">
-    Zoom: <span id="hud-zoom">15</span><br>
-    Lat: <span id="hud-lat">45.88240</span><br>
-    Lng: <span id="hud-lng">10.18370</span>
-  </div>
-
-  <!-- Floating Buttons -->
   <div class="fab-container">
     <button class="fab-btn" id="btn-gps" title="Seguimi (GPS)" onclick="toggleGPS()">
-      <svg viewBox="0 0 24 24">
-        <path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.994 8.994 0 0 0 13 3.06V1h-2v2.06A8.994 8.994 0 0 0 3.06 11H1v2h2.06A8.994 8.994 0 0 0 11 20.94V23h2v-2.06A8.994 8.994 0 0 0 20.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/>
-      </svg>
+      <svg viewBox="0 0 24 24"><path d="M12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm8.94 3A8.994 8.994 0 0 0 13 3.06V1h-2v2.06A8.994 8.994 0 0 0 3.06 11H1v2h2.06A8.994 8.994 0 0 0 11 20.94V23h2v-2.06A8.994 8.994 0 0 0 20.94 13H23v-2h-2.06zM12 19c-3.87 0-7-3.13-7-7s3.13-7 7-7 7 3.13 7 7-3.13 7-7 7z"/></svg>
     </button>
     <button class="fab-btn" title="Gestione Livelli" onclick="toggleDrawer()">
-      <svg viewBox="0 0 24 24">
-        <path d="M11.99 18.54l-7.37-5.73L3 14.07l9 7 9-7-1.63-1.27-7.38 5.74zM12 16l7.36-5.73L21 9.01l-9-7-9 7 1.63 1.27L12 16z"/>
-      </svg>
+      <svg viewBox="0 0 24 24"><path d="M11.99 18.54l-7.37-5.73L3 14.07l9 7 9-7-1.63-1.27-7.38 5.74zM12 16l7.36-5.73L21 9.01l-9-7-9 7 1.63 1.27L12 16z"/></svg>
     </button>
   </div>
 
-  <!-- Layers Drawer -->
   <div class="drawer" id="layerDrawer">
-    <div class="drawer-handle"></div>
     <div class="drawer-header">
       <div class="drawer-title">Livelli Cartografici</div>
       <button class="drawer-close" onclick="toggleDrawer()">&times;</button>
     </div>
     <div class="drawer-content">
-      
-      <!-- Base Maps -->
-      <div class="layer-group-title">Sfondo Cartografico</div>
-      
+      <div class="layer-group-title">Sfondo</div>
       <div class="layer-item">
         <div class="layer-row">
-          <div class="layer-info">
-            <span class="layer-name">OpenStreetMap</span>
-            <span class="layer-tag">Stradario standard</span>
-          </div>
+          <span class="layer-name">OpenStreetMap</span>
           <input type="radio" name="baseMap" value="osm" checked onchange="switchBaseMap('osm')">
         </div>
       </div>
-      
       <div class="layer-item">
         <div class="layer-row">
-          <div class="layer-info">
-            <span class="layer-name">Ortofoto Satellitare</span>
-            <span class="layer-tag">Esri World Imagery ad alta risoluzione</span>
-          </div>
+          <span class="layer-name">Ortofoto Satellitare</span>
           <input type="radio" name="baseMap" value="sat" onchange="switchBaseMap('sat')">
         </div>
       </div>
 
-      <!-- Catasto -->
-      <div class="layer-group-title">Catasto (Agenzia Entrate)</div>
-
+      <div class="layer-group-title">Catasto Agenzia Entrate</div>
       <div class="layer-item">
         <div class="layer-row">
           <div class="layer-info">
-            <span class="layer-name">Mappali & Fabbricati</span>
-            <span class="layer-tag">WMS Ufficiale INSPIRE (Fogli, Particelle, Numeri)</span>
+            <span class="layer-name">Particelle, Fogli e Numeri</span>
+            <span class="layer-tag">Include vestizioni e testi mappale</span>
           </div>
           <label class="switch">
             <input type="checkbox" id="toggle-catasto" checked onchange="toggleLayer('catasto', this.checked)">
@@ -468,19 +332,14 @@
         </div>
         <div class="layer-slider-row">
           <span>Opacit&agrave;</span>
-          <input type="range" min="0.1" max="1" step="0.05" value="0.8" oninput="setLayerOpacity('catasto', this.value)">
+          <input type="range" min="0.2" max="1" step="0.05" value="0.9" oninput="setLayerOpacity('catasto', this.value)">
         </div>
       </div>
 
-      <!-- Vincolistica Ambientale -->
-      <div class="layer-group-title">Vincoli Ambientali & Territoriali (Regione Lombardia)</div>
-
+      <div class="layer-group-title">Vincoli Territoriali</div>
       <div class="layer-item">
         <div class="layer-row">
-          <div class="layer-info">
-            <span class="layer-name">Vincolo Idrogeologico / PAI Po</span>
-            <span class="layer-tag">Pericolosit&agrave; e dissesto idrogeologico</span>
-          </div>
+          <span class="layer-name">PAI / Difesa Suolo</span>
           <label class="switch">
             <input type="checkbox" id="toggle-pai" checked onchange="toggleLayer('pai', this.checked)">
             <span class="slider"></span>
@@ -488,16 +347,13 @@
         </div>
         <div class="layer-slider-row">
           <span>Opacit&agrave;</span>
-          <input type="range" min="0.1" max="1" step="0.05" value="0.65" oninput="setLayerOpacity('pai', this.value)">
+          <input type="range" min="0.1" max="1" step="0.05" value="0.6" oninput="setLayerOpacity('pai', this.value)">
         </div>
       </div>
 
       <div class="layer-item">
         <div class="layer-row">
-          <div class="layer-info">
-            <span class="layer-name">Vincolo Paesaggistico (D.Lgs 42/04)</span>
-            <span class="layer-tag">Fiumi, boschi, crinali e aree tutelate ex art. 142</span>
-          </div>
+          <span class="layer-name">Vincolo Paesaggistico (Art. 142)</span>
           <label class="switch">
             <input type="checkbox" id="toggle-paesaggio" checked onchange="toggleLayer('paesaggio', this.checked)">
             <span class="slider"></span>
@@ -508,86 +364,49 @@
           <input type="range" min="0.1" max="1" step="0.05" value="0.6" oninput="setLayerOpacity('paesaggio', this.value)">
         </div>
       </div>
-
-      <div class="layer-item">
-        <div class="layer-row">
-          <div class="layer-info">
-            <span class="layer-name">Rete Natura 2000 (SIC / ZPS)</span>
-            <span class="layer-tag">Aree protette, parchi e biodiversit&agrave;</span>
-          </div>
-          <label class="switch">
-            <input type="checkbox" id="toggle-natura2000" onchange="toggleLayer('natura2000', this.checked)">
-            <span class="slider"></span>
-          </label>
-        </div>
-        <div class="layer-slider-row">
-          <span>Opacit&agrave;</span>
-          <input type="range" min="0.1" max="1" step="0.05" value="0.6" oninput="setLayerOpacity('natura2000', this.value)">
-        </div>
-      </div>
-
-      <div style="font-size:11px; color:#94a3b8; text-align:center; margin-top:20px; line-height:1.5;">
-        Tocca qualunque punto per interrogare particella, foglio e vincoli attivi.
-      </div>
-
     </div>
   </div>
 
-  <!-- Leaflet JS -->
-  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
 
   <script>
-    // Configurazione poligoni e centri comunali
     const COMUNI = {
-      darfo: { name: 'Darfo Boario Terme', belfiore: 'D251', coords: [45.8824, 10.1837], zoom: 16 },
-      angolo: { name: 'Angolo Terme', belfiore: 'A293', coords: [45.8913, 10.1472], zoom: 16 },
-      artogne: { name: 'Artogne', belfiore: 'A451', coords: [45.8504, 10.1631], zoom: 16 },
-      gianico: { name: 'Gianico', belfiore: 'E010', coords: [45.8647, 10.1741], zoom: 16 },
-      piancamuno: { name: 'Pian Camuno', belfiore: 'G546', coords: [45.8441, 10.1517], zoom: 16 },
-      esine: { name: 'Esine', belfiore: 'D434', coords: [45.9238, 10.2505], zoom: 16 }
+      darfo: { name: 'Darfo Boario Terme', belfiore: 'D251', coords: [45.8824, 10.1837] },
+      angolo: { name: 'Angolo Terme', belfiore: 'A293', coords: [45.8913, 10.1472] },
+      artogne: { name: 'Artogne', belfiore: 'A451', coords: [45.8504, 10.1631] },
+      gianico: { name: 'Gianico', belfiore: 'E010', coords: [45.8647, 10.1741] },
+      piancamuno: { name: 'Pian Camuno', belfiore: 'G546', coords: [45.8441, 10.1517] },
+      esine: { name: 'Esine', belfiore: 'D434', coords: [45.9238, 10.2505] }
     };
 
-    // Inizializzazione Mappa centrata su Darfo Boario Terme
-    const map = L.map('map', {
-      zoomControl: false,
-      attributionControl: false
-    }).setView([45.8824, 10.1837], 15);
-
+    const map = L.map('map', { zoomControl: false, maxZoom: 21 }).setView([45.8824, 10.1837], 17);
     L.control.zoom({ position: 'topright' }).addTo(map);
 
-    // Layer Base
-    const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 19 }).addTo(map);
-    const satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 19 });
+    const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 21 }).addTo(map);
+    const satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 21 });
 
-    // Endpoint WMS
-    const CATASTO_WMS_URL = 'https://wms.cartografia.agenziaentrate.gov.it/inspire/wms/owl01/service';
-    const REGIONE_DIFESA_URL = 'https://www.cartografia.regione.lombardia.it/arcgis/services/wms/difesa_suolo_wms/MapServer/WMSServer';
-    const REGIONE_PAESAGGIO_URL = 'https://www.cartografia.regione.lombardia.it/arcgis/services/wms/paesaggio_wms/MapServer/WMSServer';
-    const REGIONE_BIODIV_URL = 'https://www.cartografia.regione.lombardia.it/arcgis/services/wms/biodiversita_wms/MapServer/WMSServer';
-
-    // Layer WMS Catasto
-    const catastoLayer = L.tileLayer.wms(CATASTO_WMS_URL, {
-      layers: 'CP.CadastralParcel,CP.CadastralZoning',
+    // WMS Catasto Ufficiale con il layer vestizioni (numeri mappale) e piastrelle 512px
+    const catastoLayer = L.tileLayer.wms('https://wms.cartografia.agenziaentrate.gov.it/inspire/wms/owl01/service', {
+      layers: 'CP.CadastralZoning,CP.CadastralParcel,fabbricati,vestizioni',
       format: 'image/png',
       transparent: true,
-      opacity: 0.8,
+      opacity: 0.9,
       version: '1.3.0',
       crs: L.CRS.EPSG3857,
-      maxZoom: 20
+      maxZoom: 21,
+      tileSize: 512
     }).addTo(map);
 
-    // Layer WMS PAI / Difesa Suolo
-    const paiLayer = L.tileLayer.wms(REGIONE_DIFESA_URL, {
+    const paiLayer = L.tileLayer.wms('https://www.cartografia.regione.lombardia.it/arcgis/services/wms/difesa_suolo_wms/MapServer/WMSServer', {
       layers: '0,1,2,3',
       format: 'image/png',
       transparent: true,
-      opacity: 0.65,
+      opacity: 0.6,
       version: '1.3.0',
       crs: L.CRS.EPSG3857
     }).addTo(map);
 
-    // Layer WMS Vincolo Paesaggistico
-    const paesaggioLayer = L.tileLayer.wms(REGIONE_PAESAGGIO_URL, {
+    const paesaggioLayer = L.tileLayer.wms('https://www.cartografia.regione.lombardia.it/arcgis/services/wms/paesaggio_wms/MapServer/WMSServer', {
       layers: '0,1,2',
       format: 'image/png',
       transparent: true,
@@ -596,324 +415,96 @@
       crs: L.CRS.EPSG3857
     }).addTo(map);
 
-    // Layer WMS Rete Natura 2000
-    const naturaLayer = L.tileLayer.wms(REGIONE_BIODIV_URL, {
-      layers: '0,1',
-      format: 'image/png',
-      transparent: true,
-      opacity: 0.6,
-      version: '1.3.0',
-      crs: L.CRS.EPSG3857
-    });
-
-    const layersMap = {
-      catasto: catastoLayer,
-      pai: paiLayer,
-      paesaggio: paesaggioLayer,
-      natura2000: naturaLayer
-    };
-
-    // HUD Update
-    function updateHUD() {
-      const center = map.getCenter();
-      document.getElementById('hud-zoom').innerText = map.getZoom();
-      document.getElementById('hud-lat').innerText = center.lat.toFixed(5);
-      document.getElementById('hud-lng').innerText = center.lng.toFixed(5);
-    }
-    map.on('move', updateHUD);
-    updateHUD();
+    const layersMap = { catasto: catastoLayer, pai: paiLayer, paesaggio: paesaggioLayer };
 
     function switchBaseMap(type) {
       if (type === 'sat') {
-        map.removeLayer(osmLayer);
-        satLayer.addTo(map);
-        satLayer.bringToBack();
+        map.removeLayer(osmLayer); satLayer.addTo(map); satLayer.bringToBack();
       } else {
-        map.removeLayer(satLayer);
-        osmLayer.addTo(map);
-        osmLayer.bringToBack();
+        map.removeLayer(satLayer); osmLayer.addTo(map); osmLayer.bringToBack();
       }
     }
 
     function toggleLayer(id, isChecked) {
       const l = layersMap[id];
       if (!l) return;
-      if (isChecked) {
-        l.addTo(map);
-      } else {
-        map.removeLayer(l);
-      }
+      if (isChecked) l.addTo(map); else map.removeLayer(l);
     }
 
     function setLayerOpacity(id, val) {
       const l = layersMap[id];
-      if (l && l.setOpacity) {
-        l.setOpacity(parseFloat(val));
-      }
+      if (l && l.setOpacity) l.setOpacity(parseFloat(val));
     }
 
     function jumpToComune(key) {
       const target = COMUNI[key];
       if (target) {
-        map.flyTo(target.coords, target.zoom, { duration: 1.2 });
+        map.flyTo(target.coords, 18, { duration: 1.2 });
         document.getElementById('zone-status').innerText = target.name;
       }
     }
 
     function toggleDrawer() {
-      const drawer = document.getElementById('layerDrawer');
-      drawer.classList.toggle('open');
+      document.getElementById('layerDrawer').classList.toggle('open');
     }
 
     function showToast(msg) {
       const toast = document.getElementById('toast');
-      toast.innerText = msg;
-      toast.classList.add('show');
-      setTimeout(() => toast.classList.remove('show'), 2600);
+      toast.innerText = msg; toast.classList.add('show');
+      setTimeout(() => toast.classList.remove('show'), 2500);
     }
 
-    // Costruzione URL GetFeatureInfo WMS standard
-    function getFeatureInfoUrl(latlng, layerUrl, layers, queryLayers) {
-      const point = map.latLngToContainerPoint(latlng, map.getZoom());
-      const size = map.getSize();
-      const bounds = map.getBounds();
-      const crs = map.options.crs;
-
-      const sw = crs.project(bounds.getSouthWest());
-      const ne = crs.project(bounds.getNorthEast());
-
-      const params = {
-        request: 'GetFeatureInfo',
-        service: 'WMS',
-        srs: 'EPSG:3857',
-        version: '1.1.1',
-        bbox: [sw.x, sw.y, ne.x, ne.y].join(','),
-        height: size.y,
-        width: size.x,
-        layers: layers,
-        query_layers: queryLayers,
-        info_format: 'application/json',
-        x: Math.round(point.x),
-        y: Math.round(point.y)
-      };
-
-      const urlParams = Object.keys(params).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(params[k])).join('&');
-      return layerUrl + '?' + urlParams;
-    }
-
-    // Helper stima del comune basato su vicinanza geometrica
-    function detectNearestComune(lat, lng) {
-      let nearest = null;
-      let minDist = Infinity;
-      for (const key in COMUNI) {
-        const c = COMUNI[key];
+    function getNearestComune(lat, lng) {
+      let nearest = null; let minDist = Infinity;
+      for (const k in COMUNI) {
+        const c = COMUNI[k];
         const d = Math.hypot(c.coords[0] - lat, c.coords[1] - lng);
-        if (d < minDist) {
-          minDist = d;
-          nearest = c;
-        }
+        if (d < minDist) { minDist = d; nearest = c; }
       }
       return nearest;
     }
 
-    // Query WMS con timeout e fallback
-    async function fetchWmsInfo(url, isCatasto = false) {
-      try {
-        const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 3500);
-        const res = await fetch(url, { signal: controller.signal });
-        clearTimeout(timeoutId);
-        
-        if (!res.ok) return null;
-        const text = await res.text();
-        
-        try {
-          return { type: 'json', data: JSON.parse(text) };
-        } catch(e) {
-          return { type: 'html', data: text };
-        }
-      } catch (err) {
-        return null;
-      }
-    }
+    map.on('click', function(e) {
+      const lat = e.latlng.lat.toFixed(6);
+      const lng = e.latlng.lng.toFixed(6);
+      const com = getNearestComune(e.latlng.lat, e.latlng.lng);
+      const curZoom = map.getZoom();
 
-    // Esecuzione controllo click su mappa
-    map.on('click', async function(e) {
-      const lat = e.latlng.lat;
-      const lng = e.latlng.lng;
-      const latStr = lat.toFixed(6);
-      const lngStr = lng.toFixed(6);
-      const comuneEstimato = detectNearestComune(lat, lng);
+      const zoomTip = curZoom < 18 
+        ? `<div style="background:#eff6ff; color:#1e40af; padding:6px; border-radius:6px; margin:6px 0; font-size:11px;">
+             <strong>Zoom attuale: ${curZoom}</strong><br>
+             Ingrandisci a livello 18 o 19 per leggere nitidamente i numeri stampati dei mappali.
+           </div>`
+        : `<div style="color:#059669; font-size:11px; margin:4px 0;">&#10003; Zoom ottimale per lettura mappale a schermo.</div>`;
 
-      // Popup iniziale con indicatori di caricamento
-      const popup = L.popup({ minWidth: 260, maxWidth: 320 })
-        .setLatLng(e.latlng)
-        .setContent(`
-          <div class="query-popup">
-            <div class="query-popup-header">
-              <span class="query-popup-title">${comuneEstimato ? comuneEstimato.name : 'Punto Interrogato'}</span>
-              <span style="font-size:10px; color:#64748b; font-family:monospace;">${latStr}, ${lngStr}</span>
-            </div>
-            
-            <div class="query-section">
-              <div class="query-section-title">
-                <span>Riferimento Catastale</span>
-                <span class="loading-spinner" id="spin-catasto"></span>
-              </div>
-              <div id="res-catasto" style="font-size:12px; color:#475569;">
-                Interrogazione server Agenzia Entrate...
-              </div>
-            </div>
-
-            <div class="query-section">
-              <div class="query-section-title">
-                <span>Vincolistica Ambientale & PGT</span>
-                <span class="loading-spinner" id="spin-vincoli"></span>
-              </div>
-              <div id="res-vincoli" style="font-size:12px; color:#475569;">
-                Interrogazione Geoportale Regionale...
-              </div>
-            </div>
-
-            <div style="font-size:10px; color:#94a3b8; display:flex; justify-content:space-between; align-items:center; margin-top:4px;">
-              <span>Zoom attuale: ${map.getZoom()}</span>
-              <a href="https://www.google.com/maps?q=${latStr},${lngStr}" target="_blank" style="color:#2563eb; text-decoration:none; font-weight:600;">Apri Google Maps &rarr;</a>
-            </div>
+      const content = `
+        <div style="font-size:12px; line-height:1.4; min-width:230px;">
+          <div style="font-weight:700; font-size:13px; color:#0f172a; border-bottom:1px solid #e2e8f0; padding-bottom:4px; margin-bottom:6px;">
+            ${com ? com.name : 'Punto selezionato'}
           </div>
-        `)
-        .openOn(map);
+          <div style="font-family:monospace; color:#475569; font-size:11px;">Coord: ${lat}, ${lng}</div>
+          ${com ? `<div style="font-size:11px; color:#64748b;">Codice Catastale: <strong>${com.belfiore}</strong></div>` : ''}
+          
+          ${zoomTip}
 
-      // 1. Query Catasto Agenzia Entrate
-      // Per il catasto usiamo sia GetFeatureInfo sia l'estrazione visiva dal layer attivo
-      const catastoUrl = getFeatureInfoUrl(e.latlng, CATASTO_WMS_URL, 'CP.CadastralParcel', 'CP.CadastralParcel');
-      
-      // 2. Query Difesa Suolo / Vincolo Idrogeologico PAI
-      const paiUrl = getFeatureInfoUrl(e.latlng, REGIONE_DIFESA_URL, '0,1,2,3', '0,1,2,3');
-
-      // 3. Query Vincolo Paesaggistico D.Lgs 42/04
-      const paesaggioUrl = getFeatureInfoUrl(e.latlng, REGIONE_PAESAGGIO_URL, '0,1,2', '0,1,2');
-
-      // 4. Query Rete Natura 2000
-      const naturaUrl = getFeatureInfoUrl(e.latlng, REGIONE_BIODIV_URL, '0,1', '0,1');
-
-      // Esecuzione concorrente
-      const [resCatasto, resPai, resPaesaggio, resNatura] = await Promise.all([
-        fetchWmsInfo(catastoUrl, true),
-        fetchWmsInfo(paiUrl),
-        fetchWmsInfo(paesaggioUrl),
-        fetchWmsInfo(naturaUrl)
-      ]);
-
-      // Elaborazione Catasto
-      let catastoHtml = '';
-      let foglioFound = null;
-      let particellaFound = null;
-
-      if (resCatasto && resCatasto.type === 'json' && resCatasto.data.features && resCatasto.data.features.length > 0) {
-        const props = resCatasto.data.features[0].properties || {};
-        foglioFound = props.FOGLIO || props.foglio || props.sheet;
-        particellaFound = props.NUMERO || props.particella || props.parcel || props.label;
-      } else if (resCatasto && resCatasto.type === 'html' && resCatasto.data.includes('CadastralParcel')) {
-        // parsing HTML INSPIRE
-        const text = resCatasto.data;
-        const matchFoglio = text.match(/FOGLIO\s*[:=]\s*([0-9]+)/i) || text.match(/sheet\s*[:=]\s*([0-9]+)/i);
-        const matchPart = text.match(/NUMERO\s*[:=]\s*([0-9A-Z]+)/i) || text.match(/parcel\s*[:=]\s*([0-9A-Z]+)/i);
-        if (matchFoglio) foglioFound = matchFoglio[1];
-        if (matchPart) particellaFound = matchPart[1];
-      }
-
-      if (foglioFound || particellaFound) {
-        catastoHtml = `
-          <div style="font-weight:600; color:#0f172a; margin-bottom:2px;">
-            ${comuneEstimato ? comuneEstimato.name + ' (' + comuneEstimato.belfiore + ')' : ''}
+          <div style="margin-top:8px; border-top:1px solid #e2e8f0; padding-top:6px;">
+            <span class="badge-tag badge-catasto">Catasto Attivo</span>
+            <span class="badge-tag badge-paesaggio">Vincolo Paesaggistico</span>
           </div>
-          <div>Foglio: <strong>${foglioFound || 'N.D.'}</strong> &bull; Particella: <strong>${particellaFound || 'N.D.'}</strong></div>
-          <div style="font-size:10px; color:#059669; margin-top:2px;">&#10003; Dati identificati da WMS Catasto</div>
-        `;
-      } else {
-        // Indicazione diretta quando il WMS pubblico Agenzia Entrate ha restrizioni CORS su GetFeatureInfo
-        catastoHtml = `
-          <div style="font-weight:600; color:#0f172a; margin-bottom:2px;">
-            ${comuneEstimato ? comuneEstimato.name + ' (' + comuneEstimato.belfiore + ')' : 'Comune'}
+
+          <div style="margin-top:8px;">
+            <a href="https://geoportale.cartografia.agenziaentrate.gov.it/" target="_blank" style="color:#2563eb; text-decoration:none; font-weight:600; font-size:11px;">
+              Consulta Geoportale AdE &rarr;
+            </a>
           </div>
-          <div style="color:#475569;">
-            Confine particella visibile sul retino catastale attivo.<br>
-            <span style="font-size:11px; color:#2563eb;">Zoom consigliato &ge; 17 per leggere il numero di particella.</span>
-          </div>
-        `;
-      }
+        </div>
+      `;
 
-      // Elaborazione Vincoli
-      let vincoliList = [];
-
-      // PAI / Idrogeologico
-      if (resPai && resPai.data && (JSON.stringify(resPai.data).length > 60 || (typeof resPai.data === 'string' && resPai.data.length > 80))) {
-        vincoliList.push(`
-          <div style="margin-bottom:6px;">
-            <span class="badge-tag badge-vincolo-warn">PAI / IDROGEOLOGICO</span><br>
-            <strong>Presenza vincolo idrogeologico / pericolosit&agrave; PAI</strong><br>
-            <span style="font-size:11px; color:#64748b;">Area a dissesto / attenzione idraulica - Autorit&agrave; di Bacino Distrettuale Fiume Po</span>
-          </div>
-        `);
-      }
-
-      // Paesaggistico art. 142
-      if (resPaesaggio && resPaesaggio.data && (JSON.stringify(resPaesaggio.data).length > 60 || (typeof resPaesaggio.data === 'string' && resPaesaggio.data.length > 80))) {
-        vincoliList.push(`
-          <div style="margin-bottom:6px;">
-            <span class="badge-tag badge-paesaggio">VINCOLO PAESAGGISTICO</span><br>
-            <strong>Area tutelata ex art. 142 D.Lgs. 42/2004</strong><br>
-            <span style="font-size:11px; color:#64748b;">Fascia fluviale Oglio / corsi d'acqua tutelati o boscati di versante</span>
-          </div>
-        `);
-      }
-
-      // Rete Natura 2000
-      if (resNatura && resNatura.data && (JSON.stringify(resNatura.data).length > 60 || (typeof resNatura.data === 'string' && resNatura.data.length > 80))) {
-        vincoliList.push(`
-          <div style="margin-bottom:6px;">
-            <span class="badge-tag badge-natura">RETE NATURA 2000</span><br>
-            <strong>Sito di Interesse Comunitario (SIC / ZPS)</strong><br>
-            <span style="font-size:11px; color:#64748b;">Zona Speciale di Conservazione (Direttiva Habitat)</span>
-          </div>
-        `);
-      }
-
-      // Fallback analitico territoriale basato sui vincoli standard dei 6 comuni
-      if (vincoliList.length === 0) {
-        // Controllo se i layer sono attivi per dare feedback coerente
-        const activeLayers = [];
-        if (map.hasLayer(paiLayer)) activeLayers.push('PAI Idrogeologico');
-        if (map.hasLayer(paesaggioLayer)) activeLayers.push('Paesaggio D.Lgs 42/04');
-        if (map.hasLayer(naturaLayer)) activeLayers.push('Rete Natura 2000');
-
-        vincoliList.push(`
-          <div>
-            <span class="badge-tag badge-vincolo-ok">NESSUN VINCOLO CRITICO RILEVATO</span><br>
-            <span style="font-size:11px; color:#475569;">
-              Punto interrogato sui layer attivi (${activeLayers.join(', ')}).<br>
-              Se l'area ricade entro 150m da corsi d'acqua o su pendio boscato, verifica la tavola di vincolo paesaggistico attiva.
-            </span>
-          </div>
-        `);
-      }
-
-      // Aggiornamento DOM Popup
-      const spinCatasto = document.getElementById('spin-catasto');
-      const spinVincoli = document.getElementById('spin-vincoli');
-      const elemCatasto = document.getElementById('res-catasto');
-      const elemVincoli = document.getElementById('res-vincoli');
-
-      if (spinCatasto) spinCatasto.style.display = 'none';
-      if (spinVincoli) spinVincoli.style.display = 'none';
-      if (elemCatasto) elemCatasto.innerHTML = catastoHtml;
-      if (elemVincoli) elemVincoli.innerHTML = vincoliList.join('');
+      L.popup().setLatLng(e.latlng).setContent(content).openOn(map);
     });
 
-    // Geolocalizzazione GPS live
     let gpsWatchId = null;
     let userMarker = null;
-    let userCircle = null;
 
     function toggleGPS() {
       const btn = document.getElementById('btn-gps');
@@ -922,70 +513,23 @@
         gpsWatchId = null;
         btn.classList.remove('gps-active');
         if (userMarker) map.removeLayer(userMarker);
-        if (userCircle) map.removeLayer(userCircle);
         showToast('GPS disattivato');
         return;
       }
-
-      if (!('geolocation' in navigator)) {
-        alert('Geolocalizzazione non supportata su questo browser.');
-        return;
-      }
-
       btn.classList.add('gps-active');
-      showToast('Acquisizione segnale GPS...');
-
+      showToast('Acquisizione GPS...');
       gpsWatchId = navigator.geolocation.watchPosition(
-        (pos) => {
-          const lat = pos.coords.latitude;
-          const lng = pos.coords.longitude;
-          const acc = pos.coords.accuracy;
-          const latlng = [lat, lng];
-
+        pos => {
+          const latlng = [pos.coords.latitude, pos.coords.longitude];
           if (!userMarker) {
-            userMarker = L.circleMarker(latlng, {
-              radius: 9,
-              fillColor: '#2563eb',
-              color: '#ffffff',
-              weight: 3,
-              opacity: 1,
-              fillOpacity: 1
-            }).addTo(map);
-
-            userCircle = L.circle(latlng, {
-              radius: acc,
-              color: '#2563eb',
-              weight: 1,
-              fillColor: '#3b82f6',
-              fillOpacity: 0.15
-            }).addTo(map);
-
-            map.setView(latlng, 18);
-            showToast('GPS agganciato (±' + Math.round(acc) + 'm)');
+            userMarker = L.circleMarker(latlng, { radius: 9, fillColor: '#2563eb', color: '#fff', weight: 3, fillOpacity: 1 }).addTo(map);
+            map.setView(latlng, 19);
           } else {
             userMarker.setLatLng(latlng);
-            userCircle.setLatLng(latlng);
-            userCircle.setRadius(acc);
           }
-
-          // Trigger interrogazione automatica sul punto GPS
-          userMarker.off('click');
-          userMarker.on('click', () => {
-            map.fire('click', { latlng: L.latLng(lat, lng) });
-          });
         },
-        (err) => {
-          console.error(err);
-          btn.classList.remove('gps-active');
-          navigator.geolocation.clearWatch(gpsWatchId);
-          gpsWatchId = null;
-          showToast('Errore GPS: ' + err.message);
-        },
-        {
-          enableHighAccuracy: true,
-          maximumAge: 1000,
-          timeout: 10000
-        }
+        err => { showToast('Errore GPS: ' + err.message); btn.classList.remove('gps-active'); },
+        { enableHighAccuracy: true, maximumAge: 1000 }
       );
     }
   </script>
