@@ -3,269 +3,105 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Mappa Catasto & Vincoli - Val Camonica</title>
+  <title>Mappa Catasto & Vincoli Dettagliati - Val Camonica</title>
   
-  <!-- Leaflet CSS -->
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
   
   <style>
-    * {
-      box-sizing: border-box;
-      -webkit-tap-highlight-color: transparent;
-    }
-    body, html {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      overflow: hidden;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-      background: #1a1a1a;
-      color: #333;
-    }
-    #map {
-      width: 100%;
-      height: 100%;
-      z-index: 1;
-    }
+    * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+    body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #0f172a; }
+    #map { width: 100%; height: 100%; z-index: 1; }
     
     .top-bar {
-      position: absolute;
-      top: 12px;
-      left: 12px;
-      right: 12px;
-      z-index: 1000;
-      display: flex;
-      gap: 8px;
-      align-items: center;
-      pointer-events: none;
+      position: absolute; top: 10px; left: 10px; right: 10px; z-index: 1000;
+      display: flex; gap: 8px; align-items: center; pointer-events: none;
     }
     .top-badge {
-      pointer-events: auto;
-      background: rgba(255, 255, 255, 0.95);
-      padding: 8px 14px;
-      border-radius: 24px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.18);
-      font-size: 13px;
-      font-weight: 600;
-      color: #1e293b;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      backdrop-filter: blur(8px);
+      pointer-events: auto; background: rgba(255, 255, 255, 0.96);
+      padding: 7px 12px; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+      font-size: 12px; font-weight: 700; color: #1e293b; display: flex; align-items: center; gap: 6px;
+      backdrop-filter: blur(6px);
     }
-    .status-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 50%;
-      background: #10b981;
-    }
+    .status-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; }
     .quick-comuni-select {
-      pointer-events: auto;
-      background: rgba(255, 255, 255, 0.95);
-      border: 1px solid #cbd5e1;
-      border-radius: 20px;
-      padding: 6px 12px;
-      font-size: 12px;
-      font-weight: 600;
-      color: #0f172a;
-      outline: none;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+      pointer-events: auto; background: rgba(255, 255, 255, 0.96);
+      border: 1px solid #cbd5e1; border-radius: 20px; padding: 6px 10px;
+      font-size: 12px; font-weight: 600; color: #0f172a; outline: none;
+      backdrop-filter: blur(6px); box-shadow: 0 4px 12px rgba(0,0,0,0.15);
     }
 
-    .fab-container {
-      position: absolute;
-      bottom: 24px;
-      right: 16px;
-      z-index: 1000;
-      display: flex;
-      flex-direction: column;
-      gap: 12px;
-    }
+    .fab-container { position: absolute; bottom: 20px; right: 14px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; }
     .fab-btn {
-      width: 52px;
-      height: 52px;
-      border-radius: 50%;
-      border: none;
-      background: #ffffff;
-      color: #0f172a;
-      box-shadow: 0 4px 16px rgba(0,0,0,0.25);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      width: 50px; height: 50px; border-radius: 50%; border: none; background: #ffffff;
+      color: #0f172a; box-shadow: 0 4px 14px rgba(0,0,0,0.25); display: flex;
+      align-items: center; justify-content: center; cursor: pointer;
     }
-    .fab-btn:active {
-      transform: scale(0.92);
-    }
-    .fab-btn.gps-active {
-      background: #2563eb;
-      color: #fff;
-    }
-    .fab-btn svg {
-      width: 24px;
-      height: 24px;
-      fill: currentColor;
-    }
+    .fab-btn:active { transform: scale(0.92); }
+    .fab-btn.gps-active { background: #2563eb; color: #fff; }
+    .fab-btn svg { width: 22px; height: 22px; fill: currentColor; }
 
     .drawer {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      max-height: 75vh;
-      background: rgba(255, 255, 255, 0.98);
-      border-top-left-radius: 22px;
-      border-top-right-radius: 22px;
-      box-shadow: 0 -8px 24px rgba(0,0,0,0.22);
-      z-index: 1050;
-      transform: translateY(105%);
-      transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
+      position: absolute; bottom: 0; left: 0; right: 0; max-height: 75vh;
+      background: rgba(255, 255, 255, 0.98); border-top-left-radius: 20px; border-top-right-radius: 20px;
+      box-shadow: 0 -8px 24px rgba(0,0,0,0.25); z-index: 1050; transform: translateY(105%);
+      transition: transform 0.28s ease-out; display: flex; flex-direction: column;
     }
-    .drawer.open {
-      transform: translateY(0);
-    }
-    .drawer-header {
-      padding: 14px 20px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid #e2e8f0;
-    }
-    .drawer-title {
-      font-size: 16px;
-      font-weight: 700;
-      color: #0f172a;
-    }
-    .drawer-close {
-      background: transparent;
-      border: none;
-      font-size: 22px;
-      color: #64748b;
-      cursor: pointer;
-      padding: 4px 8px;
-    }
-    .drawer-content {
-      padding: 16px 20px 30px;
-      overflow-y: auto;
-    }
+    .drawer.open { transform: translateY(0); }
+    .drawer-header { padding: 12px 18px; display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid #e2e8f0; }
+    .drawer-title { font-size: 15px; font-weight: 700; color: #0f172a; }
+    .drawer-close { background: transparent; border: none; font-size: 24px; color: #64748b; cursor: pointer; line-height: 1; }
+    .drawer-content { padding: 14px 18px 28px; overflow-y: auto; }
     
-    .layer-group-title {
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: #64748b;
-      font-weight: 700;
-      margin: 14px 0 8px;
-    }
-    .layer-item {
-      display: flex;
-      flex-direction: column;
-      background: #f8fafc;
-      border: 1px solid #e2e8f0;
-      border-radius: 12px;
-      padding: 10px 12px;
-      margin-bottom: 8px;
-    }
-    .layer-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
-    .layer-info {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-    }
-    .layer-name {
-      font-size: 14px;
-      font-weight: 600;
-      color: #1e293b;
-    }
-    .layer-tag {
-      font-size: 11px;
-      color: #64748b;
-    }
-    .layer-slider-row {
-      margin-top: 8px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 11px;
-      color: #64748b;
-    }
-    .layer-slider-row input[type="range"] {
-      flex: 1;
-      accent-color: #2563eb;
-    }
+    .layer-group-title { font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: #64748b; font-weight: 700; margin: 12px 0 6px; }
+    .layer-item { display: flex; flex-direction: column; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 10px; padding: 8px 12px; margin-bottom: 6px; }
+    .layer-row { display: flex; align-items: center; justify-content: space-between; }
+    .layer-name { font-size: 13px; font-weight: 600; color: #1e293b; }
+    .layer-tag { font-size: 11px; color: #64748b; }
+    .layer-slider-row { margin-top: 6px; display: flex; align-items: center; gap: 8px; font-size: 11px; color: #64748b; }
+    .layer-slider-row input[type="range"] { flex: 1; accent-color: #2563eb; }
 
-    .switch {
-      position: relative;
-      display: inline-block;
-      width: 44px;
-      height: 24px;
-      flex-shrink: 0;
-    }
+    .switch { position: relative; display: inline-block; width: 40px; height: 22px; flex-shrink: 0; }
     .switch input { opacity: 0; width: 0; height: 0; }
-    .slider {
-      position: absolute;
-      cursor: pointer;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: #cbd5e1;
-      transition: .25s;
-      border-radius: 24px;
-    }
-    .slider:before {
-      position: absolute;
-      content: "";
-      height: 18px;
-      width: 18px;
-      left: 3px;
-      bottom: 3px;
-      background-color: white;
-      transition: .25s;
-      border-radius: 50%;
-    }
+    .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #cbd5e1; transition: .2s; border-radius: 22px; }
+    .slider:before { position: absolute; content: ""; height: 16px; width: 16px; left: 3px; bottom: 3px; background-color: white; transition: .2s; border-radius: 50%; }
     input:checked + .slider { background-color: #2563eb; }
-    input:checked + .slider:before { transform: translateX(20px); }
+    input:checked + .slider:before { transform: translateX(18px); }
 
     .toast {
-      position: absolute;
-      top: 70px;
-      left: 50%;
-      transform: translateX(-50%) translateY(-20px);
-      background: #0f172a;
-      color: #fff;
-      padding: 8px 16px;
-      border-radius: 20px;
-      font-size: 12px;
-      opacity: 0;
-      pointer-events: none;
-      transition: all 0.3s ease;
-      z-index: 2000;
+      position: absolute; top: 65px; left: 50%; transform: translateX(-50%) translateY(-20px);
+      background: #0f172a; color: #fff; padding: 7px 14px; border-radius: 16px; font-size: 12px;
+      opacity: 0; pointer-events: none; transition: all 0.25s ease; z-index: 2000; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
     }
-    .toast.show {
-      opacity: 1;
-      transform: translateX(-50%) translateY(0);
-    }
+    .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-    .badge-tag {
-      display: inline-block;
-      font-size: 10px;
-      font-weight: 600;
-      padding: 2px 6px;
-      border-radius: 4px;
-      margin-right: 4px;
-      margin-bottom: 4px;
+    /* Custom Popup */
+    .leaflet-popup-content-wrapper { border-radius: 14px; padding: 2px; box-shadow: 0 8px 24px rgba(0,0,0,0.3); }
+    .popup-box { font-size: 12px; line-height: 1.45; max-width: 300px; color: #1e293b; }
+    .popup-header { border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 6px; }
+    .popup-title { font-weight: 700; font-size: 13px; color: #0f172a; }
+    .popup-coord { font-family: monospace; font-size: 11px; color: #64748b; }
+    
+    .popup-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 8px 10px; margin-bottom: 6px; }
+    .popup-card-title { font-size: 10px; font-weight: 700; text-transform: uppercase; color: #64748b; margin-bottom: 4px; display: flex; justify-content: space-between; }
+    
+    .badge { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 4px; margin: 2px 2px 2px 0; }
+    .badge-red { background: #fee2e2; color: #991b1b; }
+    .badge-amber { background: #fef3c7; color: #92400e; }
+    .badge-blue { background: #dbeafe; color: #1e40af; }
+    .badge-green { background: #dcfce7; color: #166534; }
+    .badge-purple { background: #ede9fe; color: #5b21b6; }
+
+    .vincolo-item { margin-bottom: 6px; padding-bottom: 6px; border-bottom: 1px dashed #e2e8f0; }
+    .vincolo-item:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+    .vincolo-law { font-weight: 700; color: #0f172a; font-size: 11.5px; }
+    .vincolo-spec { color: #b45309; font-weight: 600; font-size: 11px; margin-top: 1px; }
+    .vincolo-note { font-size: 10.5px; color: #475569; margin-top: 1px; }
+
+    .spinner {
+      display: inline-block; width: 12px; height: 12px; border: 2px solid #cbd5e1;
+      border-top-color: #2563eb; border-radius: 50%; animation: spin 0.8s linear infinite;
     }
-    .badge-catasto { background: #dbeafe; color: #1e40af; }
-    .badge-vincolo-warn { background: #fee2e2; color: #991b1b; }
-    .badge-vincolo-ok { background: #dcfce7; color: #166534; }
-    .badge-paesaggio { background: #fef3c7; color: #92400e; }
+    @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
@@ -273,7 +109,7 @@
   <div class="top-bar">
     <div class="top-badge">
       <span class="status-dot"></span>
-      <span id="zone-status">Valle Camonica</span>
+      <span id="zone-status">Localizzazione in corso...</span>
     </div>
     <select id="comuniSelect" class="quick-comuni-select" onchange="jumpToComune(this.value)">
       <option value="" disabled selected>Comuni...</option>
@@ -300,11 +136,11 @@
 
   <div class="drawer" id="layerDrawer">
     <div class="drawer-header">
-      <div class="drawer-title">Livelli Cartografici</div>
+      <div class="drawer-title">Livelli & Mappe</div>
       <button class="drawer-close" onclick="toggleDrawer()">&times;</button>
     </div>
     <div class="drawer-content">
-      <div class="layer-group-title">Sfondo</div>
+      <div class="layer-group-title">Sfondo Cartografico</div>
       <div class="layer-item">
         <div class="layer-row">
           <span class="layer-name">OpenStreetMap</span>
@@ -313,17 +149,17 @@
       </div>
       <div class="layer-item">
         <div class="layer-row">
-          <span class="layer-name">Ortofoto Satellitare</span>
+          <span class="layer-name">Ortofoto Satellitare HD</span>
           <input type="radio" name="baseMap" value="sat" onchange="switchBaseMap('sat')">
         </div>
       </div>
 
-      <div class="layer-group-title">Catasto Agenzia Entrate</div>
+      <div class="layer-group-title">Catasto Ufficiale Agenzia Entrate</div>
       <div class="layer-item">
         <div class="layer-row">
           <div class="layer-info">
-            <span class="layer-name">Particelle, Fogli e Numeri</span>
-            <span class="layer-tag">Include vestizioni e testi mappale</span>
+            <span class="layer-name">Particelle, Fogli e Retino</span>
+            <span class="layer-tag">Confini mappali + Fabbricati</span>
           </div>
           <label class="switch">
             <input type="checkbox" id="toggle-catasto" checked onchange="toggleLayer('catasto', this.checked)">
@@ -336,10 +172,13 @@
         </div>
       </div>
 
-      <div class="layer-group-title">Vincoli Territoriali</div>
+      <div class="layer-group-title">Vincoli Ambientali (Regione Lombardia)</div>
       <div class="layer-item">
         <div class="layer-row">
-          <span class="layer-name">PAI / Difesa Suolo</span>
+          <div class="layer-info">
+            <span class="layer-name">Vincolo Idrogeologico / PAI Po</span>
+            <span class="layer-tag">Fasce fluviali Oglio, dissesto e frane</span>
+          </div>
           <label class="switch">
             <input type="checkbox" id="toggle-pai" checked onchange="toggleLayer('pai', this.checked)">
             <span class="slider"></span>
@@ -347,13 +186,16 @@
         </div>
         <div class="layer-slider-row">
           <span>Opacit&agrave;</span>
-          <input type="range" min="0.1" max="1" step="0.05" value="0.6" oninput="setLayerOpacity('pai', this.value)">
+          <input type="range" min="0.1" max="1" step="0.05" value="0.65" oninput="setLayerOpacity('pai', this.value)">
         </div>
       </div>
 
       <div class="layer-item">
         <div class="layer-row">
-          <span class="layer-name">Vincolo Paesaggistico (Art. 142)</span>
+          <div class="layer-info">
+            <span class="layer-name">Vincolo Paesaggistico (Art. 142 & 136)</span>
+            <span class="layer-tag">Fascia 150m fiumi, boschi, montagne, bellezze</span>
+          </div>
           <label class="switch">
             <input type="checkbox" id="toggle-paesaggio" checked onchange="toggleLayer('paesaggio', this.checked)">
             <span class="slider"></span>
@@ -361,7 +203,7 @@
         </div>
         <div class="layer-slider-row">
           <span>Opacit&agrave;</span>
-          <input type="range" min="0.1" max="1" step="0.05" value="0.6" oninput="setLayerOpacity('paesaggio', this.value)">
+          <input type="range" min="0.1" max="1" step="0.05" value="0.65" oninput="setLayerOpacity('paesaggio', this.value)">
         </div>
       </div>
     </div>
@@ -379,29 +221,31 @@
       esine: { name: 'Esine', belfiore: 'D434', coords: [45.9238, 10.2505] }
     };
 
-    const map = L.map('map', { zoomControl: false, maxZoom: 21 }).setView([45.8824, 10.1837], 17);
+    // Vista di default temporanea (Darfo Boario Terme)
+    const map = L.map('map', { zoomControl: false, maxZoom: 21 }).setView([45.8824, 10.1837], 16);
     L.control.zoom({ position: 'topright' }).addTo(map);
 
     const osmLayer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', { maxZoom: 21 }).addTo(map);
     const satLayer = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}', { maxZoom: 21 });
 
-    // WMS Catasto Ufficiale con il layer vestizioni (numeri mappale) e piastrelle 512px
     const catastoLayer = L.tileLayer.wms('https://wms.cartografia.agenziaentrate.gov.it/inspire/wms/owl01/service', {
-      layers: 'CP.CadastralZoning,CP.CadastralParcel,fabbricati,vestizioni',
+      layers: 'CP.CadastralZoning,CP.CadastralParcel',
       format: 'image/png',
       transparent: true,
       opacity: 0.9,
       version: '1.3.0',
       crs: L.CRS.EPSG3857,
-      maxZoom: 21,
-      tileSize: 512
+      maxZoom: 21
     }).addTo(map);
+
+    const REST_PAI_URL = 'https://www.cartografia.regione.lombardia.it/arcgis/rest/services/wms/difesa_suolo_wms/MapServer';
+    const REST_PAESAGGIO_URL = 'https://www.cartografia.regione.lombardia.it/arcgis/rest/services/wms/paesaggio_wms/MapServer';
 
     const paiLayer = L.tileLayer.wms('https://www.cartografia.regione.lombardia.it/arcgis/services/wms/difesa_suolo_wms/MapServer/WMSServer', {
       layers: '0,1,2,3',
       format: 'image/png',
       transparent: true,
-      opacity: 0.6,
+      opacity: 0.65,
       version: '1.3.0',
       crs: L.CRS.EPSG3857
     }).addTo(map);
@@ -410,7 +254,7 @@
       layers: '0,1,2',
       format: 'image/png',
       transparent: true,
-      opacity: 0.6,
+      opacity: 0.65,
       version: '1.3.0',
       crs: L.CRS.EPSG3857
     }).addTo(map);
@@ -464,47 +308,234 @@
       return nearest;
     }
 
-    map.on('click', function(e) {
-      const lat = e.latlng.lat.toFixed(6);
-      const lng = e.latlng.lng.toFixed(6);
-      const com = getNearestComune(e.latlng.lat, e.latlng.lng);
-      const curZoom = map.getZoom();
+    async function queryArcGisIdentify(baseUrl, latlng) {
+      try {
+        const bounds = map.getBounds();
+        const size = map.getSize();
+        const mapExtent = `${bounds.getWest()},${bounds.getSouth()},${bounds.getEast()},${bounds.getNorth()}`;
+        
+        const url = `${baseUrl}/identify?` + new URLSearchParams({
+          geometry: `${latlng.lng},${latlng.lat}`,
+          geometryType: 'esriGeometryPoint',
+          sr: '4326',
+          layers: 'all',
+          tolerance: '8',
+          mapExtent: mapExtent,
+          imageDisplay: `${size.x},${size.y},96`,
+          returnGeometry: 'false',
+          f: 'json'
+        });
 
-      const zoomTip = curZoom < 18 
-        ? `<div style="background:#eff6ff; color:#1e40af; padding:6px; border-radius:6px; margin:6px 0; font-size:11px;">
-             <strong>Zoom attuale: ${curZoom}</strong><br>
-             Ingrandisci a livello 18 o 19 per leggere nitidamente i numeri stampati dei mappali.
-           </div>`
-        : `<div style="color:#059669; font-size:11px; margin:4px 0;">&#10003; Zoom ottimale per lettura mappale a schermo.</div>`;
+        const res = await fetch(url);
+        if (!res.ok) return [];
+        const data = await res.json();
+        return data.results || [];
+      } catch (err) {
+        return [];
+      }
+    }
 
-      const content = `
-        <div style="font-size:12px; line-height:1.4; min-width:230px;">
-          <div style="font-weight:700; font-size:13px; color:#0f172a; border-bottom:1px solid #e2e8f0; padding-bottom:4px; margin-bottom:6px;">
-            ${com ? com.name : 'Punto selezionato'}
+    function decodeVincoloPaesaggio(r) {
+      const attrs = r.attributes || {};
+      const layer = (r.layerName || '').toLowerCase();
+      const txt = JSON.stringify(attrs).toLowerCase();
+
+      let titolo = "Vincolo Paesaggistico (D.Lgs. 42/2004)";
+      let articolo = "Art. 142 D.Lgs. 42/2004";
+      let specifico = "Fascia tutelata per legge";
+      let dettaglio = "";
+
+      if (layer.includes('cors') || layer.includes('fium') || layer.includes('acq') || txt.includes('142_c') || txt.includes('fiume') || txt.includes('torrente') || txt.includes('acque') || txt.includes('150')) {
+        articolo = "Art. 142, comma 1, lett. c)";
+        specifico = "Fiumi, torrenti e corsi d'acqua iscritti (Fascia di rispetto 150m)";
+        dettaglio = "Sponde e territori contermini al fiume Oglio o corsi d'acqua pubblici entro 150 metri.";
+      } else if (layer.includes('bosc') || layer.includes('forest') || txt.includes('142_g') || txt.includes('bosco') || txt.includes('foresta') || txt.includes('boscate')) {
+        articolo = "Art. 142, comma 1, lett. g)";
+        specifico = "Territori coperti da foreste e da boschi";
+        dettaglio = "Aree boscate e pendii forestali tutelati per legge (art. 2 D.Lgs. 227/2001).";
+      } else if (layer.includes('mont') || txt.includes('142_d') || txt.includes('1600') || txt.includes('quota') || txt.includes('alp')) {
+        articolo = "Art. 142, comma 1, lett. d)";
+        specifico = "Montagne per la parte eccedente 1.600 metri s.l.m.";
+        dettaglio = "Aree montane alpine di quota superiore a 1.600 m slm.";
+      } else if (layer.includes('lag') || txt.includes('142_b') || txt.includes('300') || txt.includes('iseo') || txt.includes('moro')) {
+        articolo = "Art. 142, comma 1, lett. b)";
+        specifico = "Territori contermini ai laghi (Fascia di rispetto 300m)";
+        dettaglio = "Fascia di 300 metri dalla linea di battigia del bacino lacuale.";
+      } else if (layer.includes('136') || layer.includes('monum') || layer.includes('bellezz') || txt.includes('136') || txt.includes('dichiarazione') || txt.includes('notevole interesse')) {
+        titolo = "Vincolo Paesaggistico da Decreto (D.Lgs. 42/2004)";
+        articolo = "Art. 136 (ex L. 1497/1939)";
+        specifico = "Immobili ed aree di notevole interesse pubblico (Bellezze individue / d'insieme)";
+        const descDecreto = attrs.DENOMINAZIONE || attrs.NOME || attrs.OGGETTO || attrs.DESCRIZIONE || '';
+        dettaglio = descDecreto ? `Decreto: ${descDecreto}` : "Aree tutelate con formale provvedimento di notevole interesse pubblico.";
+      } else if (layer.includes('parc') || layer.includes('riserv') || txt.includes('142_f') || txt.includes('plis')) {
+        articolo = "Art. 142, comma 1, lett. f)";
+        specifico = "Parchi, riserve naturali e PLIS sovracomunali";
+        dettaglio = "Aree protette regionali o parchi locali di interesse sovracomunale.";
+      } else {
+        const descGen = attrs.TIPO || attrs.LEGENDA || attrs.DESCRIZIONE || r.layerName || '';
+        if (descGen) dettaglio = `Dettaglio strato: ${descGen}`;
+      }
+
+      return { titolo, articolo, specifico, dettaglio };
+    }
+
+    map.on('click', async function(e) {
+      const lat = e.latlng.lat;
+      const lng = e.latlng.lng;
+      const latStr = lat.toFixed(6);
+      const lngStr = lng.toFixed(6);
+      const com = getNearestComune(lat, lng);
+
+      const popup = L.popup({ minWidth: 270, maxWidth: 320 })
+        .setLatLng(e.latlng)
+        .setContent(`
+          <div class="popup-box">
+            <div class="popup-header">
+              <div class="popup-title">${com ? com.name : 'Punto Selezionato'}</div>
+              <div class="popup-coord">Lat: ${latStr} | Lng: ${lngStr}</div>
+              ${com ? `<div style="font-size:11px; color:#475569;">Cod. Belfiore: <strong>${com.belfiore}</strong></div>` : ''}
+            </div>
+
+            <div class="popup-card">
+              <div class="popup-card-title">
+                <span>Riferimento Mappale</span>
+                <span class="badge badge-blue">WMS Catasto</span>
+              </div>
+              <div style="font-size:11px; color:#334155;">
+                Comune: <strong>${com ? com.name : 'N.D.'}</strong><br>
+                Particelle e fabbricati visibili dal retino.<br>
+                <a href="https://geoportale.cartografia.agenziaentrate.gov.it/age-inspire/srv/ita/catalog.search#/home" target="_blank" style="color:#2563eb; font-weight:700;">
+                  Apri Geoportale Catasto AdE &rarr;
+                </a>
+              </div>
+            </div>
+
+            <div class="popup-card">
+              <div class="popup-card-title">
+                <span>Vincolistica Paesaggistica & PAI</span>
+                <span class="spinner" id="spin-vinc"></span>
+              </div>
+              <div id="box-vincoli" style="font-size:11px; color:#334155;">
+                Identificazione tipologia vincoli in corso...
+              </div>
+            </div>
           </div>
-          <div style="font-family:monospace; color:#475569; font-size:11px;">Coord: ${lat}, ${lng}</div>
-          ${com ? `<div style="font-size:11px; color:#64748b;">Codice Catastale: <strong>${com.belfiore}</strong></div>` : ''}
-          
-          ${zoomTip}
+        `)
+        .openOn(map);
 
-          <div style="margin-top:8px; border-top:1px solid #e2e8f0; padding-top:6px;">
-            <span class="badge-tag badge-catasto">Catasto Attivo</span>
-            <span class="badge-tag badge-paesaggio">Vincolo Paesaggistico</span>
+      const [paiResults, paesaggioResults] = await Promise.all([
+        queryArcGisIdentify(REST_PAI_URL, e.latlng),
+        queryArcGisIdentify(REST_PAESAGGIO_URL, e.latlng)
+      ]);
+
+      let vincoliTrovati = [];
+
+      if (paesaggioResults && paesaggioResults.length > 0) {
+        paesaggioResults.forEach(r => {
+          const info = decodeVincoloPaesaggio(r);
+          vincoliTrovati.push(`
+            <div class="vincolo-item">
+              <span class="badge badge-amber">PAESAGGIO</span>
+              <span class="vincolo-law">${info.articolo}</span>
+              <div class="vincolo-spec">&bull; ${info.specifico}</div>
+              <div class="vincolo-note">${info.dettaglio}</div>
+            </div>
+          `);
+        });
+      }
+
+      if (paiResults && paiResults.length > 0) {
+        paiResults.forEach(r => {
+          const nomeLayer = r.layerName || 'Pericolosità PAI';
+          const attrs = r.attributes || {};
+          const desc = attrs.CLASSE || attrs.LEGENDA || attrs.NOME || attrs.TIPO || attrs.PERICOLOSITA || '';
+          vincoliTrovati.push(`
+            <div class="vincolo-item">
+              <span class="badge badge-red">PAI IDROGEOLOGICO</span>
+              <span class="vincolo-law">${nomeLayer}</span>
+              <div class="vincolo-spec">&bull; Area a pericolosità/dissesto fluviale o versante</div>
+              ${desc ? `<div class="vincolo-note">Classe: <strong>${desc}</strong> (Autorità di Bacino Fiume Po)</div>` : ''}
+            </div>
+          `);
+        });
+      }
+
+      let vincoliHtml = '';
+      if (vincoliTrovati.length > 0) {
+        vincoliHtml = vincoliTrovati.join('');
+      } else {
+        vincoliHtml = `
+          <div style="color:#166534; padding:2px 0;">
+            <span class="badge badge-green">&#10003; NESSUN VINCOLO RILEVATO</span><br>
+            <span style="color:#64748b; font-size:10.5px; display:block; margin-top:2px;">
+              Il punto non ricade nella fascia 150m da fiumi, boschi o aree a vincolo paesaggistico/idrogeologico censite.
+            </span>
           </div>
+        `;
+      }
 
-          <div style="margin-top:8px;">
-            <a href="https://geoportale.cartografia.agenziaentrate.gov.it/" target="_blank" style="color:#2563eb; text-decoration:none; font-weight:600; font-size:11px;">
-              Consulta Geoportale AdE &rarr;
-            </a>
-          </div>
-        </div>
-      `;
-
-      L.popup().setLatLng(e.latlng).setContent(content).openOn(map);
+      const spinVinc = document.getElementById('spin-vinc');
+      const boxVinc = document.getElementById('box-vincoli');
+      if (spinVinc) spinVinc.style.display = 'none';
+      if (boxVinc) boxVinc.innerHTML = vincoliHtml;
     });
 
+    // Gestione GPS live
     let gpsWatchId = null;
     let userMarker = null;
+
+    function startGPS(autoCentering = false) {
+      if (!('geolocation' in navigator)) {
+        if (!autoCentering) alert('Geolocalizzazione non supportata su questo dispositivo.');
+        document.getElementById('zone-status').innerText = 'Valle Camonica';
+        return;
+      }
+
+      const btn = document.getElementById('btn-gps');
+      btn.classList.add('gps-active');
+      if (!autoCentering) showToast('Acquisizione GPS...');
+
+      gpsWatchId = navigator.geolocation.watchPosition(
+        pos => {
+          const latlng = [pos.coords.latitude, pos.coords.longitude];
+          const com = getNearestComune(pos.coords.latitude, pos.coords.longitude);
+          
+          if (com) {
+            document.getElementById('zone-status').innerText = com.name;
+          } else {
+            document.getElementById('zone-status').innerText = 'GPS Attivo';
+          }
+
+          if (!userMarker) {
+            userMarker = L.circleMarker(latlng, {
+              radius: 9,
+              fillColor: '#2563eb',
+              color: '#fff',
+              weight: 3,
+              fillOpacity: 1
+            }).addTo(map);
+
+            // Centratura automatica all'avvio con zoom a scala particellare
+            map.setView(latlng, 18);
+            showToast('Centrato sulla tua posizione!');
+          } else {
+            userMarker.setLatLng(latlng);
+          }
+
+          userMarker.off('click');
+          userMarker.on('click', () => {
+            map.fire('click', { latlng: L.latLng(pos.coords.latitude, pos.coords.longitude) });
+          });
+        },
+        err => {
+          console.warn('Errore GPS:', err.message);
+          btn.classList.remove('gps-active');
+          document.getElementById('zone-status').innerText = 'Valle Camonica';
+          if (!autoCentering) showToast('Errore GPS: ' + err.message);
+        },
+        { enableHighAccuracy: true, maximumAge: 1000, timeout: 10000 }
+      );
+    }
 
     function toggleGPS() {
       const btn = document.getElementById('btn-gps');
@@ -513,25 +544,17 @@
         gpsWatchId = null;
         btn.classList.remove('gps-active');
         if (userMarker) map.removeLayer(userMarker);
+        userMarker = null;
         showToast('GPS disattivato');
         return;
       }
-      btn.classList.add('gps-active');
-      showToast('Acquisizione GPS...');
-      gpsWatchId = navigator.geolocation.watchPosition(
-        pos => {
-          const latlng = [pos.coords.latitude, pos.coords.longitude];
-          if (!userMarker) {
-            userMarker = L.circleMarker(latlng, { radius: 9, fillColor: '#2563eb', color: '#fff', weight: 3, fillOpacity: 1 }).addTo(map);
-            map.setView(latlng, 19);
-          } else {
-            userMarker.setLatLng(latlng);
-          }
-        },
-        err => { showToast('Errore GPS: ' + err.message); btn.classList.remove('gps-active'); },
-        { enableHighAccuracy: true, maximumAge: 1000 }
-      );
+      startGPS(false);
     }
+
+    // AVVIO AUTOMATICO: non appena la pagina viene aperta, attiva il GPS e centra la mappa
+    window.addEventListener('DOMContentLoaded', () => {
+      startGPS(true);
+    });
   </script>
 </body>
 </html>
